@@ -2,16 +2,22 @@ import { combineReducers } from 'redux';
 
 const INITIAL_STATE = {
     current: 10,
-    possible: [
-        'Guest1',
-        'Guest2',
-        'Guest3',
-        'Guest4',
+    added: [
+        {key: 'Guest1'},
+        {key: 'Guest2'},
+        {key: 'Guest3'}
     ],
 };
 
 const guestsReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        case 'ADD_GUEST':
+            return [
+                ...state,
+                {
+                    key: 'Hello'
+                }
+            ]
         default:
             return state
     }

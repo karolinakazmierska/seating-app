@@ -35,7 +35,7 @@ const AppStackNav = ({ currentGuests, possibleGuests }) => {
 const mapStateToProps = ({ guests }) => {
     return {
         currentGuests: guests.current,
-        possibleGuests: guests.possible
+        possibleGuests: guests.added
     };
 }
 
