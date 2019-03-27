@@ -1,30 +1,26 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Button } from "react-native";
 import { connect } from 'react-redux'; // connect to redux
+import { addGuest } from './../actions/actions';
 
 class Guests extends Component {
-	onSubmit = () => {
-    	if (this.state.title.length > 0) this.props.onAdd(this.state);
-    	return null;
-  	};
-
+	constructor(props) {
+		super(props)
+	}
 	render() {
 		return (
 			<View style={styles.container}>
 				<Text style={styles.welcome}>Guests</Text>
-				<Text style={styles.welcome}>{this.props.guests.added.length}</Text>
 				<FlatList
 		          	data={this.props.guests.added}
 		         	renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
         		/>
 				<Button
-					onPress={() => this.props.dispatch({ type: 'ADD_GUEST' })}
+					onPress={() => {
+						this.props.dispatch(addGuest("GUEST NAME PLACEHOLDER"))
+						this.props.navigation.navigate('Guests')
+					}}
 					title="Add guest"
-				/>
-				<TextInput
-					style={styles.input}
-					placeholder="What needs to be done?"
-					onSubmitEditing={this.onSubmit}
 				/>
 			</View>
 		);
@@ -54,8 +50,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  const { guests } = state
-  return { guests }
+  	const { guests } = state
+  	return { guests }
 };
 
 export default connect(mapStateToProps)(Guests);

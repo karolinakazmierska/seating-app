@@ -11,10 +11,6 @@ class App extends Component {
     	super(props);
   	}
 
-	addGuest = (index) => {
-    	// ...
-  	}
-
 	render() {
 		return (
 			<Provider store={store}>
@@ -24,12 +20,4 @@ class App extends Component {
 	}
 }
 
-// const mapStateToProps = ({ guests }) => {
-// 	return {
-// 		currentGuests: state.current,
-//  	   	possibleGuests: state.possible
-// 	};
-// }
-
-// export default connect(mapStateToProps)(App);
 export default App;

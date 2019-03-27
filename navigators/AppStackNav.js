@@ -7,7 +7,7 @@ import Dashboard from "../screens/Dashboard";
 import Project from "../screens/Project";
 import Placeholder from "../screens/Placeholder";
 
-const AppStackNav = ({ currentGuests, possibleGuests }) => {
+const AppStackNav = ({ current, possible }) => {
     const Stack = createStackNavigator({
 		Home: {
 				screen: Home,
@@ -32,18 +32,12 @@ const AppStackNav = ({ currentGuests, possibleGuests }) => {
     return <Stack />;
 };
 
-const mapStateToProps = ({ guests }) => {
-    return {
-        currentGuests: guests.current,
-        possibleGuests: guests.added
-    };
-}
-
-export default connect(mapStateToProps)(AppStackNav);
-
-// With createAppContainer:
-// export default createAppContainer(connect(mapStateToProps)(AppStackNav));
-// export default compose( // import { compose } from 'redux';
-//     connect(mapStateToProps),
-//     createAppContainer
-// )(AppStackNav);
+// Commented out as caused the whole app to re-render after update of the state
+// const mapStateToProps = ({ guests }) => {
+//     return {
+//         current: guests.current,
+//         possible: guests.added
+//     };
+// }
+// export default connect(mapStateToProps)(AppStackNav);
+export default AppStackNav;

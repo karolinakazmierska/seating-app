@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { ADD_GUEST } from './../actions/actions'
 
 const INITIAL_STATE = {
     current: 10,
@@ -12,12 +13,12 @@ const INITIAL_STATE = {
 const guestsReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case 'ADD_GUEST':
-            return [
-                ...state,
-                {
-                    key: 'Hello'
-                }
-            ]
+            return Object.assign({}, state, {
+                added: [
+                    ...state.added,
+                    {key: action.text}
+                ]
+            })
         default:
             return state
     }
