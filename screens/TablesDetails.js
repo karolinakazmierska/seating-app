@@ -7,19 +7,15 @@ export default class TablesDetails extends Component {
 		return (
 			<View style={styles.container}>
 				<Text style={styles.welcome}>TablesDetails</Text>
-				<Text style={styles.params}>Params Passed:{'\n'} {navigation.state.params.topic}</Text>
-        <TouchableOpacity
-					onPress={() => navigation.navigate("Project")}
-				>
-					<Text style={[styles.link, { color: "blue" }]}>Try going to Your Project</Text>
-				</TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-					<Text style={styles.link}>Go Back</Text>
-				</TouchableOpacity>
+				<Text style={styles.params}>Params Passed:{'\n'} {navigation.getParam('table')}</Text>
 			</View>
 		);
 	}
 }
+
+//@todo: enable renaming table
+//@todo: enable deleting table
+//@todo: enable increasing table capacity
 
 const styles = StyleSheet.create({
 	container: {

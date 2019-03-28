@@ -19,7 +19,7 @@ class Guests extends Component {
 	handleInput = (text) => {
 		console.log(text);
     	this.setState({ name: text })
-   }
+   	}
 
 	submitGuest(name) {
 		let exists = false;

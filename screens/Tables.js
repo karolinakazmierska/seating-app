@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal } from "react-native";
 import { connect } from 'react-redux';
-import { deleteTable } from './../actions/actions';
+import { deleteTable, addTable } from './../actions/actions';
 import AddTableModal from './Modal';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
-import { Icon } from 'react-native-elements'
+import { Icon } from 'react-native-elements';
 
 const width = Dimensions.get('window').width;
 const halfwidth = Dimensions.get('window').width / 2;
@@ -36,6 +36,24 @@ class Tables extends Component {
 		this.setState({})
 	}
 
+	addTable = (name, capacity) => {
+		if (name === '') {
+			console.log('Name cannot be empty') // display message to the user
+			return;
+		}
+		if (capacity == 0) {
+			console.log('Table capacity cannot be zero') // display message to the user
+			return;
+		}
+		this.props.tables.tables.forEach(obj => {
+			if (obj.key.toUpperCase() == name.toUpperCase() || name == '') {
+				console.log('This table is already on the list'); // display message to the user
+				return;
+			}
+		})
+		return this.props.dispatch(addTable(name, capacity)) && this.setState({modalVisible: false});
+	}
+
 	setModalVisible(visible) {
 		console.log(visible)
     	this.setState({modalVisible: visible});
@@ -61,7 +79,10 @@ class Tables extends Component {
   							<View style={styles.tableContainer}>
 								<Text style={styles.item}>{item.key}</Text>
 								<Text style={styles.item}>{item.capacity}</Text>
-								<TouchableOpacity>
+								<TouchableOpacity
+									onPress={() => this.props.navigation.navigate('TablesDetails', {
+										table: item.key
+									})} >
 									<Icon
 									  	name='chevron-right'
 									  	type='font-awesome'
@@ -72,7 +93,7 @@ class Tables extends Component {
 						</Swipeout>
 					}}
         		/>}
-				<AddTableModal close={this.setModalVisible.bind(this)} isVisible={this.state.modalVisible} />
+				<AddTableModal close={this.setModalVisible.bind(this)} add={this.addTable.bind(this)} isVisible={this.state.modalVisible} />
 				<TouchableOpacity
 					style={styles.addTable}
 					onPress={() => this.setModalVisible(true)} >

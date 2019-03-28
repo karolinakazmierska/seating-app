@@ -6,6 +6,7 @@ import Home from "../screens/Home";
 import Dashboard from "../screens/Dashboard";
 import Project from "../screens/Project";
 import Placeholder from "../screens/Placeholder";
+import TablesDetails from "../screens/TablesDetails";
 
 const AppStackNav = ({ current, possible }) => {
     const Stack = createStackNavigator({
@@ -15,19 +16,22 @@ const AppStackNav = ({ current, possible }) => {
 					header: null,
 					title: "Home"
 				}
-			},
-			Dashboard: {
-				screen: Dashboard
-			},
-			Project: {
-				screen: Project,
-				navigationOptions: {
-					title: "Project"
-				}
-			},
-			Placeholder: {
-				screen: Placeholder
+		},
+		Dashboard: {
+			screen: Dashboard
+		},
+		Project: {
+			screen: Project,
+			navigationOptions: {
+				title: "Project"
 			}
+		},
+		Placeholder: {
+			screen: Placeholder
+		},
+        TablesDetails: {
+            screen: TablesDetails
+        }
 	});
     return <Stack />;
 };

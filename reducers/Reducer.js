@@ -55,7 +55,13 @@ const guestsReducer = (state = INITIAL_STATE, action) => {
 const tablesReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case 'ADD_TABLE':
-            console.log(action)
+            console.log('Adding table...', action.name, action.capacity)
+            return Object.assign({}, state, {
+                tables: [
+                    ...state.tables,
+                    {key: action.name, capacity: action.capacity}
+                ]
+            })
             break;
         case 'DELETE_TABLE':
             console.log('Deleting...')

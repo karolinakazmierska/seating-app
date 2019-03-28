@@ -1,6 +1,7 @@
 export const ADD_GUEST = 'ADD_GUEST';
 export const DELETE_GUEST = 'DELETE_GUEST'
 export const DELETE_TABLE = 'DELETE_TABLE'
+export const ADD_TABLE = 'ADD_TABLE'
 
 export function addGuest(text) {
     return { type: ADD_GUEST, text: text }
@@ -12,4 +13,8 @@ export function deleteGuest(text) {
 
 export function deleteTable(text) {
     return { type: DELETE_TABLE, text: text }
+}
+
+export function addTable(name,capacity) {
+    return { type: ADD_TABLE, name: name, capacity: capacity }
 }
