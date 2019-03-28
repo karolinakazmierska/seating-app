@@ -1,6 +1,10 @@
 export const ADD_GUEST = 'ADD_GUEST';
+export const DELETE_GUEST = 'DELETE_GUEST'
 
 export function addGuest(text) {
-    // console.error('dispatching')
     return { type: ADD_GUEST, text: text }
+}
+
+export function deleteGuest(text) {
+    return { type: DELETE_GUEST, text: text }
 }

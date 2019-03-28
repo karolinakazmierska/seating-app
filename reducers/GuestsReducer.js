@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { ADD_GUEST } from './../actions/actions'
+import { ADD_GUEST, DELETE_GUEST } from './../actions/actions'
 
 const INITIAL_STATE = {
     current: 10,
@@ -19,6 +19,16 @@ const guestsReducer = (state = INITIAL_STATE, action) => {
                     {key: action.text}
                 ]
             })
+        case 'DELETE_GUEST':
+            console.log('Deleting...')
+            let newState = state;
+            newState.added.forEach((obj, i) => {
+                if (obj.key == action.text) {
+                    newState.added.splice(i, 1);
+                }
+            })
+            console.log(newState);
+            return newState;
         default:
             return state
     }
