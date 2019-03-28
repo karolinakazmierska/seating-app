@@ -75,7 +75,7 @@ class Guests extends Component {
 		          	data={this.props.guests.added}
 		         	renderItem={({item}) => {
 						var key = item.key;
-						return <Swipeout right={[
+						return <Swipeout style={styles.row} right={[
 						  		{
 									text: 'Delete',
 									color: '#ffffff',
@@ -89,7 +89,6 @@ class Guests extends Component {
 						</Swipeout>
 					}}
         		/>}
-
 			</View>
 		);
 	}
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "flex-start",
 		alignItems: "center",
-		backgroundColor: "#E9B9B9"
+		backgroundColor: "#EFDBDC"
 	},
 	welcome: {
 		fontSize: 20,
@@ -113,13 +112,16 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		borderColor: "#ffffff",
 		backgroundColor: "#2B2727",
-		alignItems: 'center',
-		justifyContent: 'center',
+		alignItems: "center",
+		justifyContent: "center",
 		margin: 15
 	},
 	buttonText: {
 		fontSize: 20,
 		color: "#FFE6E6"
+	},
+	row: {
+		backgroundColor: '#FCF8F9'
 	},
 	input: {
 		width: width,
