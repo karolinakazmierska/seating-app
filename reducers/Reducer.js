@@ -1,12 +1,15 @@
 import { combineReducers } from 'redux';
-import { ADD_GUEST, DELETE_GUEST, DELETE_TABLE } from './../actions/actions'
+import { ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST } from './../actions/actions'
 
 const INITIAL_STATE = {
     current: 10,
     added: [
-        {key: 'Guest1'},
-        {key: 'Guest2'},
-        {key: 'Guest3'}
+        {key: 'Guest1', assignedTo: 'TableName1'},
+        {key: 'Guest2', assignedTo: 'TableName1'},
+        {key: 'Guest3', assignedTo: 'TableName1'},
+        {key: 'Guest4', assignedTo: ''},
+        {key: 'Guest5', assignedTo: ''},
+        {key: 'Guest6', assignedTo: 'TableName1'}
     ],
     tables: [
         {
@@ -53,6 +56,7 @@ const guestsReducer = (state = INITIAL_STATE, action) => {
 };
 
 const tablesReducer = (state = INITIAL_STATE, action) => {
+    let newState = state;
     switch (action.type) {
         case 'ADD_TABLE':
             console.log('Adding table...', action.name, action.capacity)
@@ -64,11 +68,29 @@ const tablesReducer = (state = INITIAL_STATE, action) => {
             })
             break;
         case 'DELETE_TABLE':
+            // @todo: unassign all guests from this table
             console.log('Deleting...')
-            let newState = state;
             newState.tables.forEach((obj, i) => {
                 if (obj.key == action.text) {
                     newState.tables.splice(i, 1);
+                }
+            })
+            console.log(newState);
+            return newState;
+        case 'ASSIGN_GUEST':
+            console.log('Assigning...', action.guestKey, action.tableKey);
+            newState.added.forEach((obj, i) => {
+                if (obj.key == action.guestKey) {
+                    obj.assignedTo = action.tableKey;
+                }
+            })
+            console.log(newState);
+            return newState;
+        case 'UNASSIGN_GUEST':
+            console.log('UNassigning...', action.guestKey, action.tableKey);
+            newState.added.forEach((obj, i) => {
+                if (obj.key == action.guestKey) {
+                    obj.assignedTo = '';
                 }
             })
             console.log(newState);

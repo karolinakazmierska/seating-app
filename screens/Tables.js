@@ -18,6 +18,10 @@ class Tables extends Component {
 		}
 	}
 
+	shouldComponentUpdate = () => {
+		return true;
+	}
+
 	renderSeparator = () => {
 	    return (
 		    <View
@@ -81,7 +85,8 @@ class Tables extends Component {
 								<Text style={styles.item}>{item.capacity}</Text>
 								<TouchableOpacity
 									onPress={() => this.props.navigation.navigate('TablesDetails', {
-										table: item.key
+										table: item.key,
+										deleteTable: this.deleteTable.bind(this)
 									})} >
 									<Icon
 									  	name='chevron-right'

@@ -16,6 +16,11 @@ class Guests extends Component {
 		}
 	}
 
+	shouldComponentUpdate = () => {
+		console.log('shouldComponentUpdate in Guests.js') // try to re-render the component here
+		return true
+	}
+
 	handleInput = (text) => {
 		console.log(text);
     	this.setState({ name: text })
@@ -83,8 +88,9 @@ class Guests extends Component {
 									onPress: () => { this.deleteGuest(key) }
 								}
 							]}>
-  							<View>
+  							<View style={styles.guestContainer}>
 								<Text style={styles.item}>{item.key}</Text>
+								<Text style={styles.item}>{item.assignedTo}</Text>
 							</View>
 						</Swipeout>
 					}}
@@ -133,11 +139,17 @@ const styles = StyleSheet.create({
 		textAlign: "left"
 	},
 	item: {
-		width: width,
+		flex: 1,
 		height: 50,
 		alignItems: 'center',
 		paddingVertical: 15,
 		paddingLeft: 15
+	},
+	guestContainer: {
+		flex: 1,
+		flexDirection: "row",
+		alignItems: "center",
+		paddingHorizontal: 15
 	}
 });
 

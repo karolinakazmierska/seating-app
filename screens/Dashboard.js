@@ -7,8 +7,14 @@ import { NavigationActions } from "react-navigation";
 export default class Dashboard extends Component {
 	constructor(props) {
 		super(props);
+		this.state = { rand: 0 }
 	}
 	static router = ProjectTabNav.router;
+
+	shouldComponentUpdate = () => {
+		console.log('shouldComponentUpdate is being called in DASHBOARD')
+		return true;
+	}
 
 	static navigationOptions = ({ navigation }) => {
 		return {
@@ -17,8 +23,10 @@ export default class Dashboard extends Component {
 	};
 
 	render() {
+		const stateClone = Object.assign({}, this.state, {rand: Math.random()})
 		return <ProjectTabNav
 			navigation={this.props.navigation}
+			screenProps={stateClone}
 		/>;
 	}
 }
