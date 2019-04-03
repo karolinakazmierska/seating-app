@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "#F5FCFF",
+		backgroundColor: "#EFDBDC",
 		width: '100%', height: '100%'
 
 	},
@@ -53,14 +53,13 @@ const styles = StyleSheet.create({
 		width: halfwidth,
 		height: 50,
 		borderRadius: 30,
-		borderColor: "#ffffff",
-		backgroundColor: "#2B2727",
+		backgroundColor: "#3A0417",
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 15
 	},
 	buttonText: {
 		fontSize: 20,
-		color: "#FFE6E6"
+		color: "#EFDBDC"
 	}
 });

@@ -20,7 +20,7 @@ class Guests extends Component {
 	componentDidMount() {
 		this._navListener = this.props.navigation.addListener('didFocus', () => {
 			console.log('-----------------DID FOCUS')
-			this.setState({}); // not re-rendering the component 
+			this.setState({}); // not re-rendering the component
 		});
 	}
 
@@ -129,8 +129,7 @@ const styles = StyleSheet.create({
 		width: halfwidth,
 		height: 50,
 		borderRadius: 30,
-		borderColor: "#ffffff",
-		backgroundColor: "#2B2727",
+		backgroundColor: "#3A0417",
 		alignItems: "center",
 		justifyContent: "center",
 		margin: 15

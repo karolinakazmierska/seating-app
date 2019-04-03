@@ -8,7 +8,7 @@ export default class Project extends Component {
 		return (
 			<View style={styles.container}>
 				<Text style={styles.welcome}>Add guests to your project and assign them to tables of your choice</Text>
-				<View style={{flexDirection: "row"}}>
+				<View>
 					<TouchableOpacity
 	          			style={styles.btn}
 	          			onPress={() => this.props.navigation.navigate('Dashboard')} >
@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
 	welcome: {
 		fontSize: 20,
 		textAlign: "center",
-		margin: 10
+		margin: 10,
+		paddingHorizontal: 30
 	},
 	link: {
 		fontSize: 16,
@@ -43,11 +44,11 @@ const styles = StyleSheet.create({
 		margin: 10
 	},
 	btn: {
-		width: 140,
-		height: 140,
-		borderRadius: 70,
-		borderColor: "#2B2727",
-		backgroundColor: "#2B2727",
+		width: 260,
+		height: 50,
+		borderRadius: 30,
+		borderColor: "#3A0417",
+		backgroundColor: "#3A0417",
 		paddingHorizontal: 20,
 		alignItems: "center",
 		justifyContent: "center",
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		fontSize: 16,
-		color: "#FFE6E6",
+		textTransform: 'uppercase',
+		color: "#EFDBDC",
 		alignSelf: "center",
 		textAlign: "center"
 	}
