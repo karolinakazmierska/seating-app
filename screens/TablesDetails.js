@@ -19,7 +19,8 @@ class TablesDetails extends Component {
 	deleteTable = (key) => {
 		console.log('Deleting:', key)
 		this.props.dispatch(deleteTable(key));
-		this.props.navigation.navigate('Tables', {});
+		this.setState({});
+		this.props.navigation.navigate('Tables', {update: true});
 	}
 
 	getAssignedGuests = (key) => {
@@ -43,11 +44,11 @@ class TablesDetails extends Component {
 	}
 
 	addGuestToTable = (guestName, tableKey) => {
-		if (this.getAssignedGuests(tableKey) >= this.props.navigation.getParam('tableCapacity')) {
-			// ..
+		if (this.getAssignedGuests(tableKey).length >= this.props.navigation.getParam('tableCapacity')) {
+			console.log('Cannot assign any more guests to this table');
+			return;
 		}
 		console.log('Adding', guestName, 'to table', tableKey)
-		console.log('Already', this.getAssignedGuests(tableKey).length, 'guests assigned. Capacity:', this.props.navigation.getParam('tableCapacity'));
 		this.props.dispatch(assignGuest(guestName,tableKey));
 		this.setState({});
 	}
@@ -179,8 +180,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  	const { tables, guests } = state
-  	return { tables, guests }
+  	const { guests } = state
+  	return { guests }
 };
 
 export default connect(mapStateToProps)(TablesDetails);

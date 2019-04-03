@@ -17,6 +17,13 @@ class Guests extends Component {
 		}
 	}
 
+	componentDidMount() {
+		this._navListener = this.props.navigation.addListener('didFocus', () => {
+			console.log('-----------------DID FOCUS')
+			this.setState({}); // not re-rendering the component 
+		});
+	}
+
 	handleInput = (text) => {
 		console.log(text);
     	this.setState({ name: text })
@@ -160,7 +167,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  	const { guests } = state
+	const { guests } = state
   	return { guests }
 };
 

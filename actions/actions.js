@@ -5,6 +5,7 @@ export const ADD_TABLE = 'ADD_TABLE'
 export const ASSIGN_GUEST = 'ASSIGN_GUEST'
 export const UNASSIGN_GUEST = 'UNASSIGN_GUEST'
 export const REORDER_GUESTS = 'REORDER_GUESTS'
+export const REFRESH = 'REFRESH'
 
 export function addGuest(text) {
     return { type: ADD_GUEST, text: text }
@@ -32,4 +33,8 @@ export function unassignGuest(guest,table) {
 
 export function reorderGuests(guests,table) {
     return { type: REORDER_GUESTS, newGuests: guests, tableKey: table }
+}
+
+export function refresh() {
+    return { type: REFRESH }
 }

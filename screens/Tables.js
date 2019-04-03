@@ -49,7 +49,7 @@ class Tables extends Component {
 			console.log('Table capacity cannot be zero') // display message to the user
 			return;
 		}
-		this.props.tables.tables.forEach(obj => {
+		this.props.guests.tables.forEach(obj => {
 			if (obj.key.toUpperCase() == name.toUpperCase() || name == '') {
 				console.log('This table is already on the list'); // display message to the user
 				return;
@@ -67,9 +67,9 @@ class Tables extends Component {
 		return (
 			<View style={styles.container}>
 				<Text style={styles.welcome}>Tables</Text>
-				{this.props.tables.tables.length === 0 ? null : <FlatList
+				{this.props.guests.tables.length === 0 ? null : <FlatList
 					ItemSeparatorComponent={this.renderSeparator}
-		          	data={this.props.tables.tables}
+		          	data={this.props.guests.tables}
 		         	renderItem={({item}) => {
 						var key = item.key;
 						return <Swipeout style={styles.row} right={[
@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  	const { tables } = state
-  	return { tables }
+	const { guests } = state
+  	return { guests }
 };
 
 export default connect(mapStateToProps)(Tables);

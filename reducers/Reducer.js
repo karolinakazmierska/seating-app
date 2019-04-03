@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST, REORDER_GUESTS } from './../actions/actions'
+import { ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST, REORDER_GUESTS, REFRESH } from './../actions/actions'
 
 const INITIAL_STATE = {
     current: 10,
@@ -31,15 +31,10 @@ const INITIAL_STATE = {
     ]
 };
 
-const guestsReducer = (state = INITIAL_STATE, action) => {
+const myReducer = (state = INITIAL_STATE, action) => {
+    let newState;
     switch (action.type) {
         case 'ADD_GUEST':
-        console.log('ADD_GUEST', Object.assign({}, state, {
-            added: [
-                ...state.added,
-                {key: action.text, name: action.text, assignedTo: ''}
-            ]
-        }))
             return Object.assign({}, state, {
                 added: [
                     ...state.added,
@@ -48,21 +43,13 @@ const guestsReducer = (state = INITIAL_STATE, action) => {
             })
         case 'DELETE_GUEST':
             console.log('Deleting...')
-            let newState = state;
+            newState = state;
             newState.added.forEach((obj, i) => {
                 if (obj.name == action.text) {
                     newState.added.splice(i, 1);
                 }
             })
             return newState;
-        default:
-            return state
-    }
-};
-
-const tablesReducer = (state = INITIAL_STATE, action) => {
-    let newState = state;
-    switch (action.type) {
         case 'ADD_TABLE':
             console.log('Adding table...', action.name, action.capacity)
             return Object.assign({}, state, {
@@ -73,16 +60,22 @@ const tablesReducer = (state = INITIAL_STATE, action) => {
             })
             break;
         case 'DELETE_TABLE':
-            // @todo: unassign all guests from this table
-            console.log('Deleting...')
+            console.log('Deleting...');
+            newState = state;
             newState.tables.forEach((obj, i) => {
                 if (obj.key == action.text) {
                     newState.tables.splice(i, 1);
                 }
             })
+            newState.added.forEach(obj => {
+                if (obj.assignedTo == action.text) {
+                    obj.assignedTo = '';
+                }
+            })
             return newState;
         case 'ASSIGN_GUEST':
-            console.log('ASSIGN_GUEST: state before assigning guest', newState)
+            newState = state;
+            console.log('ASSIGN_GUEST: state before assigning guest', newState) // undefined
             console.log('Assigning...', action.guestKey, action.tableKey);
             let counter = 0;
             newState.added.forEach((obj, i) => {
@@ -94,6 +87,7 @@ const tablesReducer = (state = INITIAL_STATE, action) => {
             return newState;
         case 'UNASSIGN_GUEST':
             console.log('UNassigning...', action.guestKey, action.tableKey);
+            newState = state;
             newState.added.forEach((obj, i) => {
                 if (obj.name == action.guestKey) {
                     obj.assignedTo = '';
@@ -102,6 +96,7 @@ const tablesReducer = (state = INITIAL_STATE, action) => {
             return newState;
         case 'REORDER_GUESTS':
             console.log('REORDERING GUESTS');
+            newState = state;
             let arrAssigned = [];
             let arrNotAssigned = [];
             newState.added.forEach(obj => {
@@ -113,12 +108,14 @@ const tablesReducer = (state = INITIAL_STATE, action) => {
             });
             newState.added = action.newGuests.data.concat(arrNotAssigned);
             return newState;
+        case 'REFRESH':
+            let stateCopy = state;
+            return stateCopy;
         default:
             return state
     }
 }
 
 export default combineReducers({
-    guests: guestsReducer,
-    tables: tablesReducer
+    guests: myReducer
 });
