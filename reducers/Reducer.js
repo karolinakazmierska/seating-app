@@ -1,31 +1,31 @@
 import { combineReducers } from 'redux';
-import { ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST } from './../actions/actions'
+import { ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST, REORDER_GUESTS } from './../actions/actions'
 
 const INITIAL_STATE = {
     current: 10,
     added: [
-        {key: 'Guest1', assignedTo: 'TableName1'},
-        {key: 'Guest2', assignedTo: 'TableName1'},
-        {key: 'Guest3', assignedTo: 'TableName1'},
-        {key: 'Guest4', assignedTo: ''},
-        {key: 'Guest5', assignedTo: ''},
-        {key: 'Guest6', assignedTo: 'TableName1'}
+        {key: 'Marta', name: 'Marta', assignedTo: 'Paris'},
+        {key: 'Anna', name: 'Anna', assignedTo: 'Paris'},
+        {key: 'Pancho', name: 'Pancho', assignedTo: 'Paris'},
+        {key: 'Guillermo', name: 'Guillermo', assignedTo: ''},
+        {key: 'Adam', name: 'Adam', assignedTo: ''},
+        {key: 'Ewa', name: 'Ewa', assignedTo: ''}
     ],
     tables: [
         {
-            key: 'TableName1',
+            key: 'Paris',
             capacity: 10
         },
         {
-            key: 'TableName2',
+            key: 'Rome',
             capacity: 12
         },
         {
-            key: 'TableName3',
+            key: 'Moscow',
             capacity: 12
         },
         {
-            key: 'TableName4',
+            key: 'Warsaw',
             capacity: 10
         }
     ]
@@ -34,21 +34,26 @@ const INITIAL_STATE = {
 const guestsReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case 'ADD_GUEST':
+        console.log('ADD_GUEST', Object.assign({}, state, {
+            added: [
+                ...state.added,
+                {key: action.text, name: action.text, assignedTo: ''}
+            ]
+        }))
             return Object.assign({}, state, {
                 added: [
                     ...state.added,
-                    {key: action.text}
+                    {key: action.text, name: action.text, assignedTo: ''}
                 ]
             })
         case 'DELETE_GUEST':
             console.log('Deleting...')
             let newState = state;
             newState.added.forEach((obj, i) => {
-                if (obj.key == action.text) {
+                if (obj.name == action.text) {
                     newState.added.splice(i, 1);
                 }
             })
-            console.log(newState);
             return newState;
         default:
             return state
@@ -75,25 +80,38 @@ const tablesReducer = (state = INITIAL_STATE, action) => {
                     newState.tables.splice(i, 1);
                 }
             })
-            console.log(newState);
             return newState;
         case 'ASSIGN_GUEST':
+            console.log('ASSIGN_GUEST: state before assigning guest', newState)
             console.log('Assigning...', action.guestKey, action.tableKey);
+            let counter = 0;
             newState.added.forEach((obj, i) => {
-                if (obj.key == action.guestKey) {
+                if (obj.name == action.guestKey) {
                     obj.assignedTo = action.tableKey;
                 }
             })
-            console.log(newState);
+            console.log(newState)
             return newState;
         case 'UNASSIGN_GUEST':
             console.log('UNassigning...', action.guestKey, action.tableKey);
             newState.added.forEach((obj, i) => {
-                if (obj.key == action.guestKey) {
+                if (obj.name == action.guestKey) {
                     obj.assignedTo = '';
                 }
             })
-            console.log(newState);
+            return newState;
+        case 'REORDER_GUESTS':
+            console.log('REORDERING GUESTS');
+            let arrAssigned = [];
+            let arrNotAssigned = [];
+            newState.added.forEach(obj => {
+                if (obj.assignedTo == action.tableKey) {
+                    arrAssigned.push(obj);
+                } else {
+                    arrNotAssigned.push(obj);
+                }
+            });
+            newState.added = action.newGuests.data.concat(arrNotAssigned);
             return newState;
         default:
             return state

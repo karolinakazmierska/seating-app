@@ -11,11 +11,6 @@ export default class Dashboard extends Component {
 	}
 	static router = ProjectTabNav.router;
 
-	shouldComponentUpdate = () => {
-		console.log('shouldComponentUpdate is being called in DASHBOARD')
-		return true;
-	}
-
 	static navigationOptions = ({ navigation }) => {
 		return {
 			title: "Your Project Details",

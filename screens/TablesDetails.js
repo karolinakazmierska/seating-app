@@ -1,14 +1,19 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { connect } from 'react-redux';
-import { deleteTable, assignGuest, unassignGuest } from './../actions/actions';
+import { deleteTable, assignGuest, unassignGuest, reorderGuests } from './../actions/actions';
 import Tables from './Tables';
 import { Dimensions } from "react-native";
+import DraggableFlatList from 'react-native-draggable-flatlist'
 
 class TablesDetails extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {}
+	}
+
+	shouldComponentUpdate = () => {
+		return true;
 	}
 
 	deleteTable = (key) => {
@@ -38,7 +43,11 @@ class TablesDetails extends Component {
 	}
 
 	addGuestToTable = (guestName, tableKey) => {
+		if (this.getAssignedGuests(tableKey) >= this.props.navigation.getParam('tableCapacity')) {
+			// ..
+		}
 		console.log('Adding', guestName, 'to table', tableKey)
+		console.log('Already', this.getAssignedGuests(tableKey).length, 'guests assigned. Capacity:', this.props.navigation.getParam('tableCapacity'));
 		this.props.dispatch(assignGuest(guestName,tableKey));
 		this.setState({});
 	}
@@ -61,6 +70,11 @@ class TablesDetails extends Component {
 	    );
   	}
 
+	reorderGuests = (data, tableKey) => {
+		this.props.dispatch(reorderGuests(data,tableKey));
+		this.setState({});
+	}
+
 	render() {
     const { navigation } = this.props;
 	const tableKey = navigation.getParam('table');
@@ -72,18 +86,29 @@ class TablesDetails extends Component {
 					<Text style={styles.welcome}>EDIT THIS TABLE</Text>
 					<Text style={styles.params}>Table name: {tableKey}</Text>
 					<Text style={styles.params}>Guests assigned to this table:</Text>
-					<FlatList
-			          	data={guestsAssigned}
-			         	renderItem={({item}) => {
-							var key = item.key;
-							return <TouchableOpacity style={styles.guestContainer} onPress={() => this.removeGuestFromTable(key, tableKey)}>
-								<Text style={styles.item}>{item.key}</Text>
-							</TouchableOpacity>
+
+					<DraggableFlatList
+          				data={guestsAssigned}
+          				renderItem={({ item, index, move, moveEnd, isActive }) => {
+							var guestName = item.name;
+							return (
+								<TouchableOpacity
+									style={styles.guestContainer}
+									onLongPress={move}
+									onPressOut={moveEnd}
+									onPress={() => this.removeGuestFromTable(guestName,tableKey)}
+								>
+									<Text style={styles.item}>{guestName}</Text>
+								</TouchableOpacity>
+							)
 						}}
-	        		/>
+          				scrollPercent={20}
+          				onMoveEnd={({ data }) => this.reorderGuests({ data }, tableKey)}
+        			/>
+
 					<TouchableOpacity
 						style={styles.cancel}
-						onPress={() => this.deleteTable(key)}>
+						onPress={() => this.deleteTable(tableKey)}>
 						<Text style={styles.cancelText}>Delete this table</Text>
 					</TouchableOpacity>
 				</View>
@@ -92,9 +117,11 @@ class TablesDetails extends Component {
 						ItemSeparatorComponent={this.renderSeparator}
 						data={guestsNotAssigned}
 						renderItem={({item}) => {
-							var key = item.key;
-							return <TouchableOpacity style={styles.guestContainer} onPress={() => this.addGuestToTable(key, tableKey)}>
-								<Text style={styles.item} >{item.key}</Text>
+							var guestName = item.name;
+							return <TouchableOpacity
+								style={styles.guestContainer}
+								onPress={() => this.addGuestToTable(guestName, tableKey)}>
+								<Text style={styles.item} >{guestName}</Text>
 								<Text style={styles.item}>{item.assignedTo}</Text>
 							</TouchableOpacity>
 						}}
@@ -105,9 +132,6 @@ class TablesDetails extends Component {
 	}
 }
 
-//@todo: enable renaming table
-//@todo: enable deleting table
-//@todo: enable increasing table capacity
 const width = Dimensions.get('window').width;
 const styles = StyleSheet.create({
 	container: {

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'; // connect to redux
 import { addGuest, deleteGuest } from './../actions/actions';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
+import { Icon } from 'react-native-elements';
 
 const width = Dimensions.get('window').width;
 const halfwidth = Dimensions.get('window').width / 2;
@@ -16,11 +17,6 @@ class Guests extends Component {
 		}
 	}
 
-	shouldComponentUpdate = () => {
-		console.log('shouldComponentUpdate in Guests.js') // try to re-render the component here
-		return true
-	}
-
 	handleInput = (text) => {
 		console.log(text);
     	this.setState({ name: text })
@@ -29,8 +25,8 @@ class Guests extends Component {
 	submitGuest(name) {
 		let exists = false;
 		this.props.guests.added.forEach(obj => {
-			console.log(obj.key == name)
-			if (obj.key.toUpperCase() == name.toUpperCase() || name == '') {
+			console.log(obj.name == name)
+			if (obj.name.toUpperCase() == name.toUpperCase() || name == '') {
 				console.log('This guest is already on the list'); // display message to the user
 				exists = true;
 			}
@@ -60,7 +56,7 @@ class Guests extends Component {
 		console.log(this.props.guests.added.length)
 		return (
 			<View style={styles.container}>
-				<Text style={styles.welcome}>MANAGE YOUR GUESTS</Text>
+				<Text style={styles.welcome}>ADD OR REMOVE GUESTS</Text>
 				<TextInput
 					style={styles.input}
 					value={this.state.name}
@@ -79,17 +75,27 @@ class Guests extends Component {
 					ItemSeparatorComponent={this.renderSeparator}
 		          	data={this.props.guests.added}
 		         	renderItem={({item}) => {
-						var key = item.key;
+						var guestName = item.name;
 						return <Swipeout style={styles.row} right={[
 						  		{
 									text: 'Delete',
 									color: '#ffffff',
 									backgroundColor: '#532323',
-									onPress: () => { this.deleteGuest(key) }
+									onPress: () => { this.deleteGuest(guestName) }
 								}
 							]}>
   							<View style={styles.guestContainer}>
-								<Text style={styles.item}>{item.key}</Text>
+								<Icon
+									name='user'
+									type='font-awesome'
+									color='#FFE6E6'
+								/>
+								<Text style={styles.item}>{guestName}</Text>
+								<Icon
+									name='circle'
+									type='font-awesome'
+									color='#FFE6E6'
+								/>
 								<Text style={styles.item}>{item.assignedTo}</Text>
 							</View>
 						</Swipeout>

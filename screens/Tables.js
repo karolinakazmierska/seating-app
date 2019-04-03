@@ -81,11 +81,22 @@ class Tables extends Component {
 								}
 							]}>
   							<View style={styles.tableContainer}>
+								<Icon
+									name='circle'
+									type='font-awesome'
+									color='#FFE6E6'
+								/>
 								<Text style={styles.item}>{item.key}</Text>
+								<Icon
+									name='users'
+									type='font-awesome'
+									color='#FFE6E6'
+								/>
 								<Text style={styles.item}>{item.capacity}</Text>
 								<TouchableOpacity
 									onPress={() => this.props.navigation.navigate('TablesDetails', {
 										table: item.key,
+										tableCapacity: item.capacity,
 										deleteTable: this.deleteTable.bind(this)
 									})} >
 									<Icon
