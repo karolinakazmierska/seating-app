@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
 		textAlign: "left"
 	},
     counter: {
-        backgroundColor: "#532323",
+        backgroundColor: "#A03B54",
         height: 40,
         width: 40,
         borderRadius: 20,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
 		height: 50,
 		width: 150,
 		borderRadius: 40,
-		backgroundColor: "#532323",
+		backgroundColor: "#A03B54",
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 15

@@ -7,15 +7,18 @@ export default class Home extends Component {
 		const { navigate } = this.props.navigation;
 		return (
 			<ImageBackground source={require('./../images/rings.jpg')} style={styles.container}>
-				<Text style={styles.welcome}>
-					Welcome to Seating Chart App!
-				</Text>
-				<Text style={styles.welcome}>
+				<View style={styles.welcome}>
+					<Text style={{fontSize: 20, textAlign: "center"}}>Welcome to Seating Chart App!</Text>
+				</View>
+				<Text style={styles.subtitle}>
 					Arrange your wedding seating plan
 				</Text>
 				<View style={styles.wrapper}>
 					<TouchableOpacity style={styles.button} onPress={() => navigate("Project")}>
-						<Text style={styles.buttonText}>Your Project</Text>
+						<Text style={styles.buttonText}>Log in</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.btn} onPress={() => navigate("Project")}>
+						<Text style={styles.btnText}>Register</Text>
 					</TouchableOpacity>
 				</View>
 			</ImageBackground>
@@ -35,12 +38,23 @@ const styles = StyleSheet.create({
 
 	},
 	welcome: {
+		width: 220,
+		height: 220,
+		borderRadius: 200,
+		backgroundColor: 'rgba(252,248,249,0.5)',
+		fontSize: 20,
+		alignItems: "center",
+		justifyContent: "center",
+		textAlign: "center",
+		margin: 10,
+	},
+	subtitle: {
 		fontSize: 20,
 		textAlign: "center",
-		margin: 10
+		margin: 10,
 	},
 	wrapper: {
-		flexDirection: "row"
+		// flexDirection: "row"
 	},
 	link: {
 		fontSize: 16,
@@ -53,7 +67,7 @@ const styles = StyleSheet.create({
 		width: halfwidth,
 		height: 50,
 		borderRadius: 30,
-		backgroundColor: "#3A0417",
+		backgroundColor: "#A03B54",
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 15
@@ -61,5 +75,18 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 20,
 		color: "#EFDBDC"
+	},
+	btn: {
+		width: halfwidth,
+		height: 50,
+		borderRadius: 30,
+		backgroundColor: "#ffffff",
+		alignItems: 'center',
+		justifyContent: 'center',
+		margin: 15
+	},
+	btnText: {
+		fontSize: 20,
+		color: "#A03B54"
 	}
 });

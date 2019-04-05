@@ -7,6 +7,12 @@ import { Dimensions } from "react-native";
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Icon } from 'react-native-elements';
 
+const width = Dimensions.get('window').width;
+const tableDim = 150;
+const val1 = width/2-tableDim/2;
+const chairDim = 70;
+const tableContainerDim = width;
+
 class TablesDetails extends Component {
 	constructor(props) {
 		super(props);
@@ -77,6 +83,19 @@ class TablesDetails extends Component {
 		this.setState({});
 	}
 
+	setPosition = (index) => {
+		const capacity = this.props.navigation.getParam('tableCapacity');
+		let i = index + 1;
+		let dist = 360 / capacity;
+		let radius = capacity*10+20;
+		let offsetToParentCenter = tableContainerDim / 2;
+		let offsetToChildCenter = chairDim/2;
+		let totalOffset = offsetToParentCenter - offsetToChildCenter;
+		let y = (Math.sin((dist * i) * (Math.PI / 180)) * radius) + totalOffset;
+		let x = (Math.cos((dist * i) * (Math.PI / 180)) * radius) + totalOffset;
+		return {position: "absolute", top: y, left: x }
+	}
+
 	render() {
     const { navigation } = this.props;
 	const tableKey = navigation.getParam('table');
@@ -84,22 +103,20 @@ class TablesDetails extends Component {
 	const guestsNotAssigned = this.getNotAssignedGuests(tableKey);
 		return (
 			<View style={styles.container}>
-				<View style={{flex: 2}}>
-					<Text style={styles.welcome}>EDIT THIS TABLE</Text>
-					<Text style={styles.params}>Table name: {tableKey}</Text>
-					<Text style={styles.params}>Guests assigned to this table:</Text>
-
-					<View style={styles.table}>
+				<View style={{flex: 2, alignItems: "center"}}>
+					<View style={styles.header}>
+						<Text style={styles.welcome}>TABLE CAPACITY</Text>
+						<Text style={styles.welcome}>{this.props.navigation.getParam('tableCapacity')}</Text>
+					</View>
+					<Text style={styles.params}>Tap on guests to add them to or remove them from the table</Text>
+					<View style={styles.tableContainer}>
+						<View style={styles.table}><Text style={styles.tableName}>{tableKey}</Text></View>
 						<DraggableFlatList
 	          				data={guestsAssigned}
+							horizontal={false}
 	          				renderItem={({ item, index, move, moveEnd, isActive }) => {
 								let guestName = item.name;
-								let styleNo;
-								if (index == 0) {styleNo = {position: "absolute", top: -35, left: 75}}
-								if (index == 1) {styleNo = {position: "absolute", top: 0, right: 5}}
-								if (index == 2) {styleNo = {position: "absolute", top: 70, right: -35}}
-
-								console.log(styleNo);
+								let styleNo = this.setPosition(index);
 								return (
 									<TouchableOpacity
 										style={[styles.guestAtThisTable, styleNo]}
@@ -107,7 +124,7 @@ class TablesDetails extends Component {
 										onPressOut={moveEnd}
 										onPress={() => this.removeGuestFromTable(guestName,tableKey)}
 									>
-										<Text>{guestName}{index}</Text>
+										<Text  numberOfLines={1}>{guestName}</Text>
 									</TouchableOpacity>
 								)
 							}}
@@ -117,9 +134,9 @@ class TablesDetails extends Component {
 					</View>
 
 					<TouchableOpacity
-						style={styles.cancel}
+						style={styles.delete}
 						onPress={() => this.deleteTable(tableKey)}>
-						<Text style={styles.cancelText}>Delete this table</Text>
+						<Text style={styles.deleteText}>Delete table</Text>
 					</TouchableOpacity>
 				</View>
 				<View style={{flex: 1}}>
@@ -152,7 +169,6 @@ class TablesDetails extends Component {
 	}
 }
 
-const width = Dimensions.get('window').width;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -163,11 +179,17 @@ const styles = StyleSheet.create({
 	welcome: {
 		fontSize: 20,
 		textAlign: "center",
-		margin: 10
+		margin: 10,
+		fontWeight: "bold",
+		color: "#532323"
 	},
 	params: {
 		textAlign: "center",
 		margin: 10
+	},
+	header: {
+		flexDirection: "row",
+		justifyContent: "space-between"
 	},
 	item: {
 		flex: 1,
@@ -176,17 +198,20 @@ const styles = StyleSheet.create({
 		paddingVertical: 15,
 		paddingLeft: 15
 	},
-	cancel: {
-		height: 50,
-		width: 150,
+	delete: {
+		height: 40,
+		width: 100,
 		borderRadius: 40,
-		backgroundColor: "#532323",
+		backgroundColor: "#A03B54",
 		alignItems: 'center',
 		justifyContent: 'center',
-		margin: 15
+		position: "absolute",
+		bottom: 4,
+		right: 4
 	},
-	cancelText: {
-		color: "#ffffff"
+	deleteText: {
+		color: "#ffffff",
+		fontSize: 12
 	},
 	guestContainer: {
 		flex: 1,
@@ -196,20 +221,34 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 15,
 		backgroundColor: '#FCF8F9'
 	},
+	tableContainer: {
+		width: width,
+		height: tableContainerDim,
+	},
 	table: {
 		borderStyle: "solid",
-		borderColor: "#000000",
-		backgroundColor: "#000000",
-		borderRadius: 150,
-		height: 220,
-		width: 220,
-		marginVertical: 70,
-		overflow: "visible"
+		borderColor: "#A03B54",
+		backgroundColor: "#A03B54",
+		borderRadius: tableDim,
+		height: tableDim,
+		width: tableDim,
+		overflow: "visible",
+		position: "absolute",
+		top: tableContainerDim/2-tableDim/2,
+		left: val1,
+		flex: 1,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center"
+	},
+	tableName: {
+		color: "#FCF8F9",
+		fontSize: 16
 	},
 	guestAtThisTable: {
-		width: 70,
-		height: 70,
-		borderRadius: 50,
+		width: chairDim,
+		height: chairDim,
+		borderRadius: chairDim,
 		backgroundColor: '#FCF8F9',
 		textAlign: "center",
 		flex: 1,
@@ -217,27 +256,9 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	guest: {
-		backgroundColor: "#fefefe"
-	},
-	guest1: {
-		position: "absolute",
-		right: 0,
-		top: 0
-	},
-	guest2: {
-		position: "absolute",
-		right: 120,
-		top: 120
-	},
-	guest3: {
-		position: "absolute",
-		right: 60,
-		top: 60
-	},
-	guest4: {
-		position: "absolute",
-		right: 120,
-		top: 120
+		backgroundColor: "#fefefe",
+		fontSize: 10,
+		textAlign: "center"
 	},
 });
 
