@@ -6,6 +6,7 @@ export const ASSIGN_GUEST = 'ASSIGN_GUEST'
 export const UNASSIGN_GUEST = 'UNASSIGN_GUEST'
 export const REORDER_GUESTS = 'REORDER_GUESTS'
 export const REFRESH = 'REFRESH'
+export const LOG_IN = 'LOG_IN'
 
 export function addGuest(text) {
     return { type: ADD_GUEST, text: text }
@@ -37,4 +38,8 @@ export function reorderGuests(guests,table) {
 
 export function refresh() {
     return { type: REFRESH }
+}
+
+export function logIn() {
+    return { type: LOG_IN }
 }

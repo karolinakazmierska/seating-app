@@ -3,6 +3,7 @@ import { ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST, RE
 
 const INITIAL_STATE = {
     current: 10,
+    loggedIn: false,
     added: [
         {key: 'Marta', name: 'Marta', assignedTo: 'Paris'},
         {key: 'Anna', name: 'Anna', assignedTo: 'Paris'},
@@ -111,6 +112,10 @@ const myReducer = (state = INITIAL_STATE, action) => {
         case 'REFRESH':
             let stateCopy = state;
             return stateCopy;
+        case 'LOG_IN':
+            return Object.assign({}, state, {
+                loggedIn: true
+            })
         default:
             return state
     }
