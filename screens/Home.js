@@ -3,33 +3,91 @@ import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from "react
 import { connect } from 'react-redux';
 import { Dimensions } from "react-native";
 import LoginModal from './LoginModal';
+import firebase from './../utils/firebase';
+import Expo from 'expo';
+import { Google } from 'expo';
+import { auth } from './../utils/auth';
 
 class Home extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			modalVisible: false,
+			loggedIn: false,
+			isModalVisible: false
 		}
+	}
+
+	checkIfLoggedIn = () => {
+		firebase.auth().onAuthStateChanged((user) => {
+            console.log("Checking if user is already logged in")
+            if (user != null) {
+                console.log('User logged in:', user);
+				this.props.navigation.navigate('Project')
+            } else {
+                console.log('User NOT logged in:', user);
+				this.setModalVisible(true);
+            }
+        })
+	}
+
+	isUserEqual = (googleUser, firebaseUser) => {
+	  	if (firebaseUser) {
+	    	var providerData = firebaseUser.providerData;
+	    	for (var i = 0; i < providerData.length; i++) {
+	      		if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
+	          		providerData[i].uid === googleUser.getBasicProfile().getId()) {
+	        		return true;
+	      		}
+	    	}
+	  	}
+  		return false;
+	}
+
+	onSignIn = (googleUser) => {
+	  	var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+		    unsubscribe();
+		    if (!this.isUserEqual(googleUser, firebaseUser)) {
+		      	var credential = firebase.auth.GoogleAuthProvider.credential(
+					googleUser.idToken,
+					googleUser.accessToken
+				);
+		      	firebase.auth().signInAndRetrieveDataWithCredential(credential)
+					.then(function() {
+						console.log('User signed in!!')
+					})
+					.catch(function(error) {
+		        	var errorCode = error.code;
+		        	var errorMessage = error.message;
+		        	var email = error.email;
+		        	var credential = error.credential;
+		      	});
+		    } else {
+		      	console.log('User already signed-in Firebase.');
+		    }
+	  	}.bind(this));
+	}
+
+	loginWithGoogle = async () => {
+		this.setModalVisible(false);
+	    const clientId = auth.google.clientId;
+	    const result = await Google.logInAsync({ clientId });
+
+	    if (result.type === 'success') {
+	      console.log('Login successful', result.user);
+		  this.setState({loggedIn: true});
+	      this.onSignIn(result)
+	  } else {
+	      console.log('Login unsuccessful', result.type)
+	  }
 	}
 
 	setModalVisible = (visible) => {
 		console.log(visible)
-    	this.setState({modalVisible: visible});
+    	this.setState({isModalVisible: visible});
   	}
-
-	loggedIn = (didLogin) => {
-		// check if passed login data is correct?  --> if yes, hide the modal & proceed to Project / if not, show error
-		console.log('DidLogin?', didLogin);
-		if (didLogin) {
-			this.setState({modalVisible: false});
-		} else {
-			console.log('Login unsuccessful')
-		}
-	}
 
 	render() {
 		const { navigate } = this.props.navigation;
-		const isLoggedIn = this.props.guests.loggedIn;
 		return (
 			<ImageBackground source={require('./../images/rings.jpg')} style={styles.container}>
 				<View style={styles.welcome}>
@@ -39,30 +97,17 @@ class Home extends Component {
 					Arrange your wedding seating plan
 				</Text>
 
-					{isLoggedIn ? (
-						<View style={styles.wrapper}>
-							<TouchableOpacity style={styles.btn} onPress={() => navigate("Project")}>
-								<Text style={styles.btnText}>Project</Text>
-							</TouchableOpacity>
-						</View>
-					) : (
-						<View style={styles.wrapper}>
-							<TouchableOpacity
-								style={styles.button}
-								onPress={() => this.setModalVisible(true)}>
-								<Text style={styles.buttonText}>Log in</Text>
-							</TouchableOpacity>
-							<TouchableOpacity style={styles.btn} onPress={() => navigate("Project")}>
-								<Text style={styles.btnText}>Register</Text>
-							</TouchableOpacity>
-						</View>
-					)}
+
+				<TouchableOpacity
+					style={styles.btn}
+					onPress={() => this.checkIfLoggedIn()}>
+					<Text style={styles.btnText}>Your Project</Text>
+				</TouchableOpacity>
 
 				<LoginModal
+					login={this.loginWithGoogle.bind(this)}
 					close={this.setModalVisible.bind(this)}
-					isVisible={this.state.modalVisible}
-					navigation={this.props.navigation}
-					loginSuccess={this.loggedIn}/>
+					isVisible={this.state.isModalVisible} />
 			</ImageBackground>
 		);
 	}

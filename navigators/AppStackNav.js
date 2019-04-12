@@ -7,7 +7,6 @@ import Dashboard from "../screens/Dashboard";
 import Project from "../screens/Project";
 import Placeholder from "../screens/Placeholder";
 import TablesDetails from "../screens/TablesDetails";
-import LoginModal from "../screens/LoginModal";
 
 const AppStackNav = ({ current, possible }) => {
     const Stack = createStackNavigator({
@@ -32,9 +31,6 @@ const AppStackNav = ({ current, possible }) => {
 		},
         TablesDetails: {
             screen: TablesDetails
-        },
-        LoginModal: {
-            screen: LoginModal
         }
 	});
     return <Stack />;

@@ -8,30 +8,9 @@ import { logIn } from './../actions/actions';
 class LoginModal extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            login: '',
-            password: ''
-        }
-    }
-
-    handleLogin = (text) => {
-    	this.setState({ login: text })
-    }
-
-    handlePassword = (text) => {
-    	this.setState({ password: text })
-    }
-
-    loginUser = () => {
-        console.log('Returning true')
-        // validate login details
-        // return true if login data is correct, false if cannot log in
-        this.props.dispatch(logIn())
-        return true
     }
 
     render() {
-        console.log(this.props.navigation)
         return <Modal
             animationType="slide"
             transparent={false}
@@ -42,21 +21,11 @@ class LoginModal extends Component {
                         onPress={() => this.props.close(false)}>
                         <Icon name='times-circle' type='font-awesome' color='#A03B54' size={32} />
                     </TouchableOpacity>
-                    <View>
-                        <Text>Log in</Text>
-                    </View>
-                    <TextInput
-                        style={styles.input}
-					    onChangeText={(text) => this.handleLogin(text)}
-					    placeholder={'Your login'}>
-                    </TextInput>
-                    <TextInput
-                        style={styles.input}
-					    onChangeText={(text) => this.handlePassword(text)}
-					    placeholder={'Your password'}>
-                    </TextInput>
-                    <TouchableOpacity style={styles.btn} onPress={() => this.props.loginSuccess(this.loginUser())}>
-                        <Text style={styles.btnText}>Log in</Text>
+                    <TouchableOpacity
+                        style={styles.btn}
+                        onPress={() => this.props.login()}
+                    >
+                            <Text style={styles.btnText}>Sign in with Google</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -74,16 +43,6 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 60,
         right: 40,
-    },
-    input: {
-        width: 300,
-		height: 50,
-		paddingHorizontal: 10,
-        borderBottomColor: '#FCF8F9',
-        borderBottomWidth: 1,
-		color: "black",
-		textAlign: "left",
-        marginVertical: 10
     },
     btn: {
 		width: 160,
