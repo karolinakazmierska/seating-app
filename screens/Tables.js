@@ -6,6 +6,7 @@ import AddTableModal from './Modal';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
 import { Icon } from 'react-native-elements';
+import { myStyles } from './../utils/styles';
 
 const width = Dimensions.get('window').width;
 const halfwidth = Dimensions.get('window').width / 2;
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: "flex-start",
-		backgroundColor: "#EFDBDC"
+		backgroundColor: myStyles.colors.white
 	},
 	welcome: {
 		fontSize: 20,
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
 		height: 60,
 		width: 60,
 		borderRadius: 30,
-		backgroundColor: "#A03B54",
+		backgroundColor: myStyles.colors.dark,
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 20,

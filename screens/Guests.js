@@ -5,6 +5,7 @@ import { addGuest, deleteGuest } from './../actions/actions';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
 import { Icon } from 'react-native-elements';
+import { myStyles } from './../utils/styles';
 
 const width = Dimensions.get('window').width;
 const halfwidth = Dimensions.get('window').width / 2;
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "flex-start",
 		alignItems: "center",
-		backgroundColor: "#EFDBDC"
+		backgroundColor: myStyles.colors.light
 	},
 	welcome: {
 		fontSize: 20,
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
 		width: halfwidth,
 		height: 50,
 		borderRadius: 30,
-		backgroundColor: "#A03B54",
+		backgroundColor: myStyles.colors.dark,
 		alignItems: "center",
 		justifyContent: "center",
 		margin: 15

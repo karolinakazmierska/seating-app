@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal, TextInput } 
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { Dimensions } from "react-native";
+import { myStyles } from './../utils/styles';
 
 const width = Dimensions.get('window').width;
 
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-        backgroundColor: "#EFDBDC"
+        backgroundColor: myStyles.colors.white
 	},
     welcome: {
 		fontSize: 20,
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
 		textAlign: "left"
 	},
     counter: {
-        backgroundColor: "#A03B54",
+        backgroundColor: myStyles.colors.dark,
         height: 40,
         width: 40,
         borderRadius: 20,
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
 		height: 50,
 		width: 150,
 		borderRadius: 40,
-		backgroundColor: "#A03B54",
+		backgroundColor: myStyles.colors.dark,
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 15

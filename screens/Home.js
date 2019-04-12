@@ -7,6 +7,7 @@ import firebase from './../utils/firebase';
 import Expo from 'expo';
 import { Google } from 'expo';
 import { auth } from './../utils/auth';
+import { myStyles } from './../utils/styles';
 
 class Home extends Component {
 	constructor(props) {
@@ -51,9 +52,23 @@ class Home extends Component {
 					googleUser.idToken,
 					googleUser.accessToken
 				);
-		      	firebase.auth().signInAndRetrieveDataWithCredential(credential)
-					.then(function() {
-						console.log('User signed in!!')
+		      	firebase.auth()
+					.signInAndRetrieveDataWithCredential(credential)
+					.then(function(result) {
+						console.log('onSignIn: User signed in. Result:', result);
+						firebase
+							.database()
+							.ref('/users/' + result.user.uid)
+							.set({
+								gmail: result.user.email,
+								profile_picture: result.additionalUserInfo.profile.picture,
+								locale: result.additionalUserInfo.profile.locale,
+								first_name: result.additionalUserInfo.profile.given_name,
+								last_name: result.additionalUserInfo.profile.family_name
+							})
+							.then(function (snapshot) {
+								console.log('Snaphot', snapshot);
+							})
 					})
 					.catch(function(error) {
 		        	var errorCode = error.code;
@@ -93,17 +108,11 @@ class Home extends Component {
 				<View style={styles.welcome}>
 					<Text style={{fontSize: 20, textAlign: "center"}}>Welcome to Seating Chart App!</Text>
 				</View>
-				<Text style={styles.subtitle}>
-					Arrange your wedding seating plan
-				</Text>
-
-
 				<TouchableOpacity
 					style={styles.btn}
 					onPress={() => this.checkIfLoggedIn()}>
-					<Text style={styles.btnText}>Your Project</Text>
+					<Text style={styles.btnText}>GET STARTED</Text>
 				</TouchableOpacity>
-
 				<LoginModal
 					login={this.loginWithGoogle.bind(this)}
 					close={this.setModalVisible.bind(this)}
@@ -120,9 +129,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "#EFDBDC",
+		backgroundColor: myStyles.colors.light,
 		width: '100%', height: '100%'
-
 	},
 	welcome: {
 		width: 220,
@@ -140,9 +148,6 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		margin: 10,
 	},
-	wrapper: {
-		// flexDirection: "row"
-	},
 	link: {
 		fontSize: 16,
 		textAlign: "center",
@@ -150,31 +155,18 @@ const styles = StyleSheet.create({
 		marginBottom: 5,
 		margin: 10
 	},
-	button: {
-		width: halfwidth,
-		height: 50,
-		borderRadius: 30,
-		backgroundColor: "#A03B54",
-		alignItems: 'center',
-		justifyContent: 'center',
-		margin: 15
-	},
-	buttonText: {
-		fontSize: 20,
-		color: "#EFDBDC"
-	},
 	btn: {
 		width: halfwidth,
 		height: 50,
 		borderRadius: 30,
-		backgroundColor: "#ffffff",
+		backgroundColor: myStyles.colors.white,
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 15
 	},
 	btnText: {
 		fontSize: 20,
-		color: "#A03B54"
+		color: myStyles.colors.dark
 	}
 });
 

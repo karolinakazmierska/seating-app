@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Modal, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, Text, View, Modal, TouchableOpacity, TextInput, Image } from "react-native";
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
+import { SocialIcon } from 'react-native-elements';
 import { NavigationActions } from "react-navigation";
 import { logIn } from './../actions/actions';
+import { myStyles } from './../utils/styles';
 
 class LoginModal extends Component {
     constructor(props) {
@@ -19,13 +21,10 @@ class LoginModal extends Component {
                     <TouchableOpacity
                         style={styles.close}
                         onPress={() => this.props.close(false)}>
-                        <Icon name='times-circle' type='font-awesome' color='#A03B54' size={32} />
+                        <Icon name='times-circle' type='font-awesome' color={myStyles.colors.dark} size={32} />
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.btn}
-                        onPress={() => this.props.login()}
-                    >
-                            <Text style={styles.btnText}>Sign in with Google</Text>
+                    <TouchableOpacity onPress={() => this.props.login()} >
+                        <Image source={require('./../images/google.png')} style={{width: 192, height: 46}} />
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -37,25 +36,25 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-        backgroundColor: "#EFDBDC"
+        backgroundColor: myStyles.colors.white
 	},
     close: {
         position: "absolute",
         top: 60,
         right: 40,
     },
-    btn: {
-		width: 160,
-		height: 50,
-		borderRadius: 30,
-		backgroundColor: "#ffffff",
+    googleBtn: {
+        flexDirection: 'row',
+        height: 50,
 		alignItems: 'center',
 		justifyContent: 'center',
-		margin: 30
+		margin: 30,
+        backgroundColor: '#ffffff',
+        paddingHorizontal: 15
 	},
-	btnText: {
+	googleBtnText: {
 		fontSize: 20,
-		color: "#A03B54"
+		color: "grey"
 	}
 })
 

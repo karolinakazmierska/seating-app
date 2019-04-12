@@ -6,6 +6,7 @@ import Tables from './Tables';
 import { Dimensions } from "react-native";
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Icon } from 'react-native-elements';
+import { myStyles } from './../utils/styles';
 
 const width = Dimensions.get('window').width;
 const tableDim = 150;
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "#EFDBDC"
+		backgroundColor: myStyles.colors.white
 	},
 	welcome: {
 		fontSize: 20,
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
 		height: 40,
 		width: 100,
 		borderRadius: 40,
-		backgroundColor: "#A03B54",
+		backgroundColor: myStyles.colors.dark,
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: "absolute",
@@ -227,8 +228,8 @@ const styles = StyleSheet.create({
 	},
 	table: {
 		borderStyle: "solid",
-		borderColor: "#A03B54",
-		backgroundColor: "#A03B54",
+		borderColor: myStyles.colors.dark,
+		backgroundColor: myStyles.colors.dark,
 		borderRadius: tableDim,
 		height: tableDim,
 		width: tableDim,
