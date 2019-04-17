@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Button, List } from "react-native";
 import { connect } from 'react-redux'; // connect to redux
-import { addGuest, deleteGuest } from './../actions/actions';
+import { addGuest, deleteGuest, addGuestThunk } from './../actions/actions';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
 import { Icon } from 'react-native-elements';
@@ -40,7 +40,8 @@ class Guests extends Component {
 			}
 		})
 		this.setState({ name: '' })
-		return exists ? null : this.props.dispatch(addGuest(name));
+		return exists ? null : this.props.dispatch(addGuestThunk(name, this.props.guests.userId));
+		// return exists ? null : this.props.dispatch(addGuest(name));
 	}
 
 	deleteGuest(name) {
@@ -62,6 +63,7 @@ class Guests extends Component {
 
 	render() {
 		console.log(this.props.guests.added.length)
+		console.log('Added guests:', this.props.guests.added);
 		return (
 			<View style={styles.container}>
 				<Text style={styles.welcome}>ADD OR REMOVE GUESTS</Text>

@@ -1,3 +1,7 @@
+import firebase from './../utils/firebase';
+
+export const SET_USER = 'SET_USER';
+export const SET_STATE_FROM_DATABASE = 'SET_STATE_FROM_DATABASE';
 export const ADD_GUEST = 'ADD_GUEST';
 export const DELETE_GUEST = 'DELETE_GUEST'
 export const DELETE_TABLE = 'DELETE_TABLE'
@@ -8,8 +12,24 @@ export const REORDER_GUESTS = 'REORDER_GUESTS'
 export const REFRESH = 'REFRESH'
 export const LOG_IN = 'LOG_IN'
 
+export function setUserId(text) {
+    return { type: SET_USER, text: text }
+}
+
+export function setStateFromDatabase(userId, data) {
+    return { type: SET_STATE_FROM_DATABASE, userId: userId, data: data }
+}
+
 export function addGuest(text) {
     return { type: ADD_GUEST, text: text }
+}
+
+export function addGuestThunk(text, userId) {
+    return (dispatch) => {
+        console.log('addGuestThunk', firebase.database().ref('/users/' + userId + '/data/added'))
+        firebase.database().ref('/users/' + userId + '/data/added').push({key: text, name: text, assignedTo: ''})
+        dispatch(addGuest(text));
+    }
 }
 
 export function deleteGuest(text) {

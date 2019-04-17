@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from "react-native";
 import { connect } from 'react-redux';
+import { setUserId, setStateFromDatabase } from './../actions/actions';
 import { Dimensions } from "react-native";
 import LoginModal from './LoginModal';
 import firebase from './../utils/firebase';
@@ -18,14 +19,22 @@ class Home extends Component {
 		}
 	}
 
+	setUserId = (userId) => {
+		this.props.dispatch(setUserId(userId));
+	}
+
+	setStateFromDatabase = (userId, data) => {
+		this.props.dispatch(setStateFromDatabase(userId, data))
+	}
+
 	checkIfLoggedIn = () => {
 		firebase.auth().onAuthStateChanged((user) => {
             console.log("Checking if user is already logged in")
             if (user != null) {
-                console.log('User logged in:', user);
+                console.log('User logged in');
 				this.props.navigation.navigate('Project')
             } else {
-                console.log('User NOT logged in:', user);
+                console.log('User NOT logged in');
 				this.setModalVisible(true);
             }
         })
@@ -52,24 +61,44 @@ class Home extends Component {
 					googleUser.idToken,
 					googleUser.accessToken
 				);
-		      	firebase.auth()
+		      	firebase
+					.auth()
 					.signInAndRetrieveDataWithCredential(credential)
 					.then(function(result) {
-						console.log('onSignIn: User signed in. Result:', result);
-						firebase
-							.database()
-							.ref('/users/' + result.user.uid)
-							.set({
-								gmail: result.user.email,
-								profile_picture: result.additionalUserInfo.profile.picture,
-								locale: result.additionalUserInfo.profile.locale,
-								first_name: result.additionalUserInfo.profile.given_name,
-								last_name: result.additionalUserInfo.profile.family_name
+						console.log('onSignIn: User signed in. Result');
+						if (result.additionalUserInfo.isNewUser) {
+							console.log('---------------------IF')
+							firebase
+								.database()
+								.ref('/users/' + result.user.uid)
+								.set({
+									gmail: result.user.email,
+									profile_picture: result.additionalUserInfo.profile.picture,
+									locale: result.additionalUserInfo.profile.locale,
+									first_name: result.additionalUserInfo.profile.given_name,
+									last_name: result.additionalUserInfo.profile.family_name,
+									created_at: Date.now()
+								}).then(() => {
+								console.log('This is an new user. No initial state to be set');
+								this.setUserId(result.user.uid);
 							})
-							.then(function (snapshot) {
-								console.log('Snaphot', snapshot);
-							})
-					})
+						} else {
+							console.log('---------------------ELSE')
+							firebase
+								.database()
+								.ref('/users/' + result.user.uid)
+								.update({
+									last_logged_in: Date.now()
+								})
+								.then(() => {
+									console.log('This is an existing user. Data from database:')
+									firebase.database().ref('/users/' + result.user.uid).on("value", (snap) => {
+										this.setStateFromDatabase(result.user.uid, snap.val())
+									})
+								})
+						}
+						console.log('INITIAL_STATE:', this.props.guests)
+					}.bind(this))
 					.catch(function(error) {
 		        	var errorCode = error.code;
 		        	var errorMessage = error.message;

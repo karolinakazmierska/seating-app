@@ -21,6 +21,7 @@ class TablesDetails extends Component {
 	}
 
 	shouldComponentUpdate = () => {
+		console.log(this.props.guests.userId)
 		return true;
 	}
 

@@ -1,41 +1,46 @@
 import { combineReducers } from 'redux';
-import { ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST, REORDER_GUESTS, REFRESH } from './../actions/actions'
+import { SET_USER, SET_STATE_FROM_DATABASE, ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST, REORDER_GUESTS, REFRESH } from './../actions/actions';
 
 const INITIAL_STATE = {
-    current: 10,
+    userId: '',
     loggedIn: false,
-    added: [
-        {key: 'Marta', name: 'Marta', assignedTo: 'Paris'},
-        {key: 'Anna', name: 'Anna', assignedTo: 'Paris'},
-        {key: 'Pancho', name: 'Pancho', assignedTo: 'Paris'},
-        {key: 'Guillermo', name: 'Guillermo', assignedTo: ''},
-        {key: 'Adam', name: 'Adam', assignedTo: ''},
-        {key: 'Ewa', name: 'Ewa', assignedTo: ''}
-    ],
-    tables: [
-        {
-            key: 'Paris',
-            capacity: 10
-        },
-        {
-            key: 'Rome',
-            capacity: 12
-        },
-        {
-            key: 'Moscow',
-            capacity: 12
-        },
-        {
-            key: 'Warsaw',
-            capacity: 10
-        }
-    ]
+    added: [],
+    tables: []
 };
 
 const myReducer = (state = INITIAL_STATE, action) => {
     let newState;
     switch (action.type) {
+        case 'SET_USER':
+            return Object.assign({}, state, {
+                userId: action.text
+            })
+        case 'SET_STATE_FROM_DATABASE':
+            console.log('SET_STATE_FROM_DATABASE');
+            console.log('----------old State:', state)
+            console.log('----------old State added:', state.added.length) // 6
+            newState = state;
+            newState.userId = action.userId;
+
+            newState.added = [];
+            for (item in action.data.data.added) {
+                newState.added.push(action.data.data.added[item])
+            }
+            newState.tables = [];
+            for (item in action.data.data.tables) {
+                newState.tables.push(action.data.data.tables[item])
+            }
+            console.log('----------newState:', newState)
+            console.log('----------new State added:', newState.added.length) // undefined
+            return newState;
         case 'ADD_GUEST':
+            console.log(Object.assign({}, state, {
+                added: [
+                    ...state.added,
+                    {key: action.text, name: action.text, assignedTo: ''}
+                ]
+            }))
+
             return Object.assign({}, state, {
                 added: [
                     ...state.added,
