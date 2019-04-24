@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Button, List } from "react-native";
 import { connect } from 'react-redux'; // connect to redux
-import { addGuest, deleteGuest, addGuestThunk } from './../actions/actions';
+import { addGuest, deleteGuest, addGuestThunk, deleteGuestThunk } from './../actions/actions';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
 import { Icon } from 'react-native-elements';
@@ -18,15 +18,14 @@ class Guests extends Component {
 		}
 	}
 
-	componentDidMount() {
-		this._navListener = this.props.navigation.addListener('didFocus', () => {
-			console.log('-----------------DID FOCUS')
-			this.setState({}); // not re-rendering the component
-		});
-	}
+	// componentDidMount() {
+	// 	this._navListener = this.props.navigation.addListener('didFocus', () => {
+	// 		console.log('-----------------DID FOCUS')
+	// 		this.setState({}); // not re-rendering the component
+	// 	});
+	// }
 
 	handleInput = (text) => {
-		console.log(text);
     	this.setState({ name: text })
    	}
 
@@ -35,17 +34,16 @@ class Guests extends Component {
 		this.props.guests.added.forEach(obj => {
 			console.log(obj.name == name)
 			if (obj.name.toUpperCase() == name.toUpperCase() || name == '') {
-				console.log('This guest is already on the list'); // display message to the user
+				console.log('This guest is already on the list'); //@todo: display message to the user
 				exists = true;
 			}
 		})
 		this.setState({ name: '' })
 		return exists ? null : this.props.dispatch(addGuestThunk(name, this.props.guests.userId));
-		// return exists ? null : this.props.dispatch(addGuest(name));
 	}
 
 	deleteGuest(name) {
-		this.props.dispatch(deleteGuest(name));
+		this.props.dispatch(deleteGuestThunk(name, this.props.guests.userId));
 		this.setState({})
 	}
 
@@ -142,7 +140,8 @@ const styles = StyleSheet.create({
 		color: "#FFE6E6"
 	},
 	row: {
-		backgroundColor: '#FCF8F9'
+		backgroundColor: '#FCF8F9',
+		width: width
 	},
 	input: {
 		width: width,

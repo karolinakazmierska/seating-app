@@ -29,12 +29,11 @@ class Home extends Component {
 
 	checkIfLoggedIn = () => {
 		firebase.auth().onAuthStateChanged((user) => {
-            console.log("Checking if user is already logged in")
             if (user != null) {
-                console.log('User logged in');
+                console.log('checkIfLoggedIn(). User already logged in:', user.displayName);
 				this.props.navigation.navigate('Project')
             } else {
-                console.log('User NOT logged in');
+                console.log('checkIfLoggedIn(). User not logged in yet');
 				this.setModalVisible(true);
             }
         })
@@ -65,9 +64,9 @@ class Home extends Component {
 					.auth()
 					.signInAndRetrieveDataWithCredential(credential)
 					.then(function(result) {
-						console.log('onSignIn: User signed in. Result');
+						console.log('onSignIn(). User signed in successfully.');
 						if (result.additionalUserInfo.isNewUser) {
-							console.log('---------------------IF')
+							console.log('This is a new user.')
 							firebase
 								.database()
 								.ref('/users/' + result.user.uid)
@@ -79,11 +78,10 @@ class Home extends Component {
 									last_name: result.additionalUserInfo.profile.family_name,
 									created_at: Date.now()
 								}).then(() => {
-								console.log('This is an new user. No initial state to be set');
 								this.setUserId(result.user.uid);
 							})
 						} else {
-							console.log('---------------------ELSE')
+							console.log('This is an existing user.')
 							firebase
 								.database()
 								.ref('/users/' + result.user.uid)
@@ -91,13 +89,12 @@ class Home extends Component {
 									last_logged_in: Date.now()
 								})
 								.then(() => {
-									console.log('This is an existing user. Data from database:')
 									firebase.database().ref('/users/' + result.user.uid).on("value", (snap) => {
+										console.log('Existing user id:', result.user.uid);
 										this.setStateFromDatabase(result.user.uid, snap.val())
 									})
 								})
 						}
-						console.log('INITIAL_STATE:', this.props.guests)
 					}.bind(this))
 					.catch(function(error) {
 		        	var errorCode = error.code;
@@ -117,11 +114,11 @@ class Home extends Component {
 	    const result = await Google.logInAsync({ clientId });
 
 	    if (result.type === 'success') {
-	      console.log('Login successful', result.user);
+	      console.log('loginWithGoogle() successful', result.user);
 		  this.setState({loggedIn: true});
 	      this.onSignIn(result)
 	  } else {
-	      console.log('Login unsuccessful', result.type)
+	      console.log('loginWithGoogle() unsuccessful', result.type)
 	  }
 	}
 

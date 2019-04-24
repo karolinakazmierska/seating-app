@@ -17,6 +17,7 @@ export function setUserId(text) {
 }
 
 export function setStateFromDatabase(userId, data) {
+    console.log('Running setStateFromDatabase. User id:', userId)
     return { type: SET_STATE_FROM_DATABASE, userId: userId, data: data }
 }
 
@@ -26,14 +27,30 @@ export function addGuest(text) {
 
 export function addGuestThunk(text, userId) {
     return (dispatch) => {
+        dispatch(addGuest(text));
         console.log('addGuestThunk', firebase.database().ref('/users/' + userId + '/data/added'))
         firebase.database().ref('/users/' + userId + '/data/added').push({key: text, name: text, assignedTo: ''})
-        dispatch(addGuest(text));
     }
 }
 
 export function deleteGuest(text) {
     return { type: DELETE_GUEST, text: text }
+}
+
+export function deleteGuestThunk(text, userId) {
+    return (dispatch) => {
+        dispatch(deleteGuest(text));
+        let ref = firebase.database().ref('/users/' + userId + '/data/added');
+        ref.once("value").then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var childData = childSnapshot.val();
+                if (childData.name == text) {
+                    console.log("To delete:", childSnapshot);
+                    firebase.database().ref('/users/' + userId + '/data/added/' + childSnapshot.key).remove();
+                }
+            });
+        });
+    }
 }
 
 export function deleteTable(text) {
