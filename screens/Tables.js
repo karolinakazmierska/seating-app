@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal } from "react-native";
 import { connect } from 'react-redux';
-import { deleteTable, addTable } from './../actions/actions';
+import { deleteTable, addTable, deleteTableThunk, addTableThunk } from './../actions/actions';
 import AddTableModal from './Modal';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
@@ -24,44 +24,41 @@ class Tables extends Component {
 	}
 
 	renderSeparator = () => {
-	    return (
-		    <View
-		        style={{
-			        height: 1,
-			        width: width,
-			        backgroundColor: "#FFE6E6"
-		        }}
-		    />
-	    );
+	    return <View style={{ height: 1, width: width, backgroundColor: "#FFE6E6"}} />
   	}
 
 	deleteTable = (key) => {
 		console.log('Deleting:', key)
-		this.props.dispatch(deleteTable(key));
-		this.setState({})
+		this.props.dispatch(deleteTableThunk(key, this.props.guests.userId));
+		return this.setState({});
 	}
 
 	addTable = (name, capacity) => {
+		let exists = false;
 		if (name === '') {
-			console.log('Name cannot be empty') // display message to the user
-			return;
+			console.log('Name cannot be empty') //@todo: display message to the user
+			exists = true;
 		}
 		if (capacity == 0) {
-			console.log('Table capacity cannot be zero') // display message to the user
-			return;
+			console.log('Table capacity cannot be zero') //@todo: display message to the user
+			exists = true;
 		}
+		console.log('Current tables:', this.props.guests.tables);
 		this.props.guests.tables.forEach(obj => {
+			console.log('Checking if table exists:', obj.key.toUpperCase(), name.toUpperCase() )
 			if (obj.key.toUpperCase() == name.toUpperCase() || name == '') {
-				console.log('This table is already on the list'); // display message to the user
-				return;
+				console.log('This table is already on the list'); //@todo: display message to the user
+				exists = true;
 			}
-		})
-		return this.props.dispatch(addTable(name, capacity)) && this.setState({modalVisible: false});
+		});
+		return exists ? null : this.setState({modalVisible: false}, () => {
+			this.props.dispatch(addTableThunk(name, capacity, this.props.guests.userId))
+		});
 	}
 
 	setModalVisible(visible) {
 		console.log(visible)
-    	this.setState({modalVisible: visible});
+    	return this.setState({modalVisible: visible});
   	}
 
 	render() {

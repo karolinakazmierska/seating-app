@@ -16,12 +16,8 @@ const myReducer = (state = INITIAL_STATE, action) => {
                 userId: action.text
             })
         case 'SET_STATE_FROM_DATABASE':
-            console.log('SET_STATE_FROM_DATABASE');
-            console.log('----------old State:', state)
-            console.log('----------old State added:', state.added.length) // 6
             newState = state;
             newState.userId = action.userId;
-
             newState.added = [];
             for (item in action.data.data.added) {
                 newState.added.push(action.data.data.added[item])
@@ -30,17 +26,8 @@ const myReducer = (state = INITIAL_STATE, action) => {
             for (item in action.data.data.tables) {
                 newState.tables.push(action.data.data.tables[item])
             }
-            console.log('----------newState:', newState)
-            console.log('----------new State added:', newState.added.length) // undefined
             return newState;
         case 'ADD_GUEST':
-            console.log(Object.assign({}, state, {
-                added: [
-                    ...state.added,
-                    {key: action.text, name: action.text, assignedTo: ''}
-                ]
-            }))
-
             return Object.assign({}, state, {
                 added: [
                     ...state.added,

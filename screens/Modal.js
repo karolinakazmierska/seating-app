@@ -17,7 +17,6 @@ class AddTableModal extends Component {
 	}
 
     handleInput = (text) => {
-		console.log(text);
     	this.setState({ name: text })
     }
 

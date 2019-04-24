@@ -57,11 +57,37 @@ export function deleteTable(text) {
     return { type: DELETE_TABLE, text: text }
 }
 
-export function addTable(name,capacity) {
+export function deleteTableThunk(text, userId) {
+    console.log("deleteTableThunk");
+    return (dispatch) => {
+        dispatch(deleteTable(text));
+        let ref = firebase.database().ref('/users/' + userId + '/data/tables');
+        ref.once("value").then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var childData = childSnapshot.val();
+                if (childData.key == text) {
+                    console.log("To delete:", childSnapshot);
+                    firebase.database().ref('/users/' + userId + '/data/tables/' + childSnapshot.key).remove();
+                }
+            });
+        });
+    }
+}
+
+export function addTable(name, capacity) {
     return { type: ADD_TABLE, name: name, capacity: capacity }
 }
 
-export function assignGuest(guest,table) {
+export function addTableThunk(name, capacity, userId) {
+    console.log("addTableThunk");
+    return (dispatch) => {
+        dispatch(addTable(name, capacity));
+        console.log(firebase.database().ref('/users/' + userId + '/data/tables'))
+        firebase.database().ref('/users/' + userId + '/data/tables').push({key: name, capacity: capacity})
+    }
+}
+
+export function assignGuest(guest, table) {
     return { type: ASSIGN_GUEST, guestKey: guest, tableKey: table }
 }
 
