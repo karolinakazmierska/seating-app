@@ -130,9 +130,9 @@ class Home extends Component {
 	render() {
 		const { navigate } = this.props.navigation;
 		return (
-			<ImageBackground source={require('./../images/rings.jpg')} style={styles.container}>
+			<ImageBackground source={require('./../images/view.png')} style={styles.container}>
 				<View style={styles.welcome}>
-					<Text style={{fontSize: 20, textAlign: "center"}}>Welcome to Seating Chart App!</Text>
+					<Text style={{fontSize: 20, textAlign: "center", color: "white"}}>Welcome to Seating Chart App!</Text>
 				</View>
 				<TouchableOpacity
 					style={styles.btn}
@@ -159,15 +159,11 @@ const styles = StyleSheet.create({
 		width: '100%', height: '100%'
 	},
 	welcome: {
-		width: 220,
-		height: 220,
-		borderRadius: 200,
-		backgroundColor: 'rgba(252,248,249,0.5)',
-		fontSize: 20,
+		fontSize: 24,
 		alignItems: "center",
 		justifyContent: "center",
 		textAlign: "center",
-		margin: 10,
+		margin: 30
 	},
 	subtitle: {
 		fontSize: 20,

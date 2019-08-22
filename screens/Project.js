@@ -42,14 +42,15 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: myStyles.colors.light
+		backgroundColor: "white"
 	},
 	welcome: {
 		flex: 1,
 		fontSize: 20,
 		textAlign: "center",
 		margin: 10,
-		paddingHorizontal: 30
+		paddingHorizontal: 30,
+		paddingVertical: 50
 	},
 	link: {
 		fontSize: 16,
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 16,
 		textTransform: 'uppercase',
-		color: myStyles.colors.light,
+		color: "white",
 		alignSelf: "center",
 		textAlign: "center"
 	},
@@ -79,8 +80,8 @@ const styles = StyleSheet.create({
 		width: 160,
 		height: 40,
 		borderRadius: 30,
-		borderColor: "#A8A8A8",
-		backgroundColor: "#F4F4F4",
+		borderColor: myStyles.colors.dark,
+		backgroundColor: "white",
 		paddingHorizontal: 20,
 		alignItems: "center",
 		justifyContent: "center",
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
 		marginTop: 60,
 	},
 	btnSignOutText: {
-		color: "#A8A8A8",
+		color: myStyles.colors.dark,
 		fontSize: 16,
 		textTransform: 'uppercase',
 		alignSelf: "center",

@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { connect } from 'react-redux';
-import { deleteTable, assignGuest, unassignGuest, reorderGuests } from './../actions/actions';
+import { deleteTable, deleteTableThunk, assignGuest, assignGuestThunk, unassignGuest, unassignGuestThunk, reorderGuests, updateCapacityThunk } from './../actions/actions';
 import Tables from './Tables';
 import { Dimensions } from "react-native";
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { Icon } from 'react-native-elements';
 import { myStyles } from './../utils/styles';
+import EditCapacity from './EditCapacity';
 
 const width = Dimensions.get('window').width;
 const tableDim = 150;
@@ -17,7 +18,11 @@ const tableContainerDim = width;
 class TablesDetails extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {}
+		this.state = {
+			tableCapacity: this.props.navigation.getParam('tableCapacity'),
+			maxCapacity: false,
+			modalVisible: false
+		}
 	}
 
 	shouldComponentUpdate = () => {
@@ -27,9 +32,25 @@ class TablesDetails extends Component {
 
 	deleteTable = (key) => {
 		console.log('Deleting:', key)
-		this.props.dispatch(deleteTable(key));
+		this.props.dispatch(deleteTableThunk(key, this.props.guests.userId));
 		this.setState({});
 		this.props.navigation.navigate('Tables', {update: true});
+	}
+
+	setModalVisible = (isVisible) => {
+		console.log("Editing table's capacity");
+		console.log(isVisible);
+    	return this.setState({modalVisible: isVisible});
+	}
+
+	updateCapacity = (newCapacity,isVisible) => {
+		console.log(newCapacity);
+		// do sth to actually update the capacity
+		this.props.dispatch(updateCapacityThunk(this.props.navigation.getParam('table'), newCapacity, this.props.guests.userId));
+		return this.setState({
+			modalVisible: isVisible,
+			tableCapacity: newCapacity
+		});
 	}
 
 	getAssignedGuests = (key) => {
@@ -53,18 +74,19 @@ class TablesDetails extends Component {
 	}
 
 	addGuestToTable = (guestName, tableKey) => {
-		if (this.getAssignedGuests(tableKey).length >= this.props.navigation.getParam('tableCapacity')) {
+		if (this.getAssignedGuests(tableKey).length >= this.state.tableCapacity) {
 			console.log('Cannot assign any more guests to this table');
+			this.displayAlert();
 			return;
 		}
 		console.log('Adding', guestName, 'to table', tableKey)
-		this.props.dispatch(assignGuest(guestName,tableKey));
+		this.props.dispatch(assignGuestThunk(guestName,tableKey,this.props.guests.userId));
 		this.setState({});
 	}
 
 	removeGuestFromTable = (guestName, tableKey) => {
 		console.log('Removing', guestName, 'from table', tableKey)
-		this.props.dispatch(unassignGuest(guestName,tableKey));
+		this.props.dispatch(unassignGuestThunk(guestName,tableKey,this.props.guests.userId));
 		this.setState({});
 	}
 
@@ -86,7 +108,7 @@ class TablesDetails extends Component {
 	}
 
 	setPosition = (index) => {
-		const capacity = this.props.navigation.getParam('tableCapacity');
+		const capacity = this.state.tableCapacity;
 		let i = index + 1;
 		let dist = 360 / capacity;
 		let radius = capacity*10+20;
@@ -98,21 +120,29 @@ class TablesDetails extends Component {
 		return {position: "absolute", top: y, left: x }
 	}
 
+	displayAlert = () => {
+		this.setState({maxCapacity: true});
+		setTimeout(() => {
+			this.setState({maxCapacity: false});
+		}, 2000);
+	}
+
 	render() {
     const { navigation } = this.props;
 	const tableKey = navigation.getParam('table');
 	const guestsAssigned = this.getAssignedGuests(tableKey);
 	const guestsNotAssigned = this.getNotAssignedGuests(tableKey);
+	const capacityAlert = <Text style={styles.alert}>Cannot assign more people to this table </Text>;
 		return (
 			<View style={styles.container}>
 				<View style={{flex: 2, alignItems: "center"}}>
 					<View style={styles.header}>
-						<Text style={styles.welcome}>TABLE CAPACITY</Text>
-						<Text style={styles.welcome}>{this.props.navigation.getParam('tableCapacity')}</Text>
+						<Text style={styles.welcome}>{tableKey}</Text>
 					</View>
+					<Text style={styles.params}>Table capacity: {this.state.tableCapacity}</Text>
 					<Text style={styles.params}>Tap on guests to add them to or remove them from the table</Text>
 					<View style={styles.tableContainer}>
-						<View style={styles.table}><Text style={styles.tableName}>{tableKey}</Text></View>
+						<View style={styles.table}></View>
 						<DraggableFlatList
 	          				data={guestsAssigned}
 							horizontal={false}
@@ -133,7 +163,20 @@ class TablesDetails extends Component {
 	          				scrollPercent={20}
 	          				onMoveEnd={({ data }) => this.reorderGuests({ data }, tableKey)}
 	        			/>
+						{this.state.maxCapacity ? capacityAlert : null}
 					</View>
+
+					<TouchableOpacity
+						style={styles.edit}
+						onPress={() => this.setModalVisible(true)}>
+						<Text style={styles.deleteText}>Edit capacity</Text>
+					</TouchableOpacity>
+					<EditCapacity
+						close={this.setModalVisible.bind(this)}
+						key={tableKey}
+						currentCapacity={this.state.tableCapacity}
+						update={this.updateCapacity.bind(this)}
+						isVisible={this.state.modalVisible} />
 
 					<TouchableOpacity
 						style={styles.delete}
@@ -190,6 +233,7 @@ const styles = StyleSheet.create({
 		margin: 10
 	},
 	header: {
+		marginVertical: 10,
 		flexDirection: "row",
 		justifyContent: "space-between"
 	},
@@ -210,6 +254,17 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		bottom: 4,
 		right: 4
+	},
+	edit: {
+		height: 40,
+		width: 100,
+		borderRadius: 40,
+		backgroundColor: myStyles.colors.dark,
+		alignItems: 'center',
+		justifyContent: 'center',
+		position: "absolute",
+		bottom: 4,
+		left: 4
 	},
 	deleteText: {
 		color: "#ffffff",
@@ -262,6 +317,11 @@ const styles = StyleSheet.create({
 		fontSize: 10,
 		textAlign: "center"
 	},
+	alert: {
+		color: "#F31431",
+		fontSize: 10,
+		marginBottom: 45
+	}
 });
 
 const mapStateToProps = (state) => {

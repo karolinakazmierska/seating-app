@@ -57,13 +57,14 @@ class Guests extends Component {
 		console.log('Added guests:', this.props.guests.added);
 		return (
 			<View style={styles.container}>
-				<Text style={styles.welcome}>ADD OR REMOVE GUESTS</Text>
+				<Text style={styles.welcome}>Add or remove guests</Text>
 				<TextInput
 					style={styles.input}
 					value={this.state.name}
 					onChangeText={(text) => this.handleInput(text)}
 					placeholder={'Enter your guest name'}
 				/>
+				<View style={styles.line}></View>
 				<TouchableOpacity
          			style={styles.button}
 					onPress={() => {
@@ -89,13 +90,13 @@ class Guests extends Component {
 								<Icon
 									name='user'
 									type='font-awesome'
-									color='#FFE6E6'
+									color={myStyles.colors.dark}
 								/>
 								<Text style={styles.item}>{guestName}</Text>
 								<Icon
 									name='circle'
 									type='font-awesome'
-									color='#FFE6E6'
+									color={myStyles.colors.dark}
 								/>
 								<Text style={styles.item}>{item.assignedTo}</Text>
 							</View>
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "flex-start",
 		alignItems: "center",
-		backgroundColor: myStyles.colors.light
+		backgroundColor: "#fff"
 	},
 	welcome: {
 		fontSize: 20,
@@ -133,17 +134,23 @@ const styles = StyleSheet.create({
 		color: "#FFE6E6"
 	},
 	row: {
-		backgroundColor: '#FCF8F9',
+		backgroundColor: '#fff',
+		borderColor: myStyles.colors.lightgrey,
 		width: width
 	},
 	input: {
-		width: width,
+		width: width-30,
 		height: 50,
 		paddingHorizontal: 10,
 		borderColor: "#ffffff",
 		backgroundColor: "#ffffff",
 		color: "black",
 		textAlign: "left"
+	},
+	line: {
+		width: width - 30,
+		height: 1,
+		backgroundColor: myStyles.colors.dark
 	},
 	item: {
 		flex: 1,

@@ -19,12 +19,17 @@ const myReducer = (state = INITIAL_STATE, action) => {
             newState = state;
             newState.userId = action.userId;
             newState.added = [];
-            for (item in action.data.data.added) {
-                newState.added.push(action.data.data.added[item])
-            }
             newState.tables = [];
-            for (item in action.data.data.tables) {
-                newState.tables.push(action.data.data.tables[item])
+            if (action.data.data) { // if a user is new and has no data yet
+                console.log("*** The user has some data already")
+                console.log(action.data.data.added);
+                console.log(action.data.data.tables);
+                for (item in action.data.data.added) {
+                    newState.added.push(action.data.data.added[item])
+                }
+                for (item in action.data.data.tables) {
+                    newState.tables.push(action.data.data.tables[item])
+                }
             }
             return newState;
         case 'ADD_GUEST':
@@ -63,6 +68,15 @@ const myReducer = (state = INITIAL_STATE, action) => {
             newState.added.forEach(obj => {
                 if (obj.assignedTo == action.text) {
                     obj.assignedTo = '';
+                }
+            })
+            return newState;
+        case 'UPDATE_CAPACITY':
+            console.log('Updating capacity...');
+            newState = state;
+            newState.tables.forEach((obj, i) => {
+                if (obj.key == action.table) {
+                    obj.capacity = action.capacity;
                 }
             })
             return newState;

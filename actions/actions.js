@@ -6,6 +6,7 @@ export const ADD_GUEST = 'ADD_GUEST';
 export const DELETE_GUEST = 'DELETE_GUEST'
 export const DELETE_TABLE = 'DELETE_TABLE'
 export const ADD_TABLE = 'ADD_TABLE'
+export const UPDATE_CAPACITY = 'UPDATE_CAPACITY'
 export const ASSIGN_GUEST = 'ASSIGN_GUEST'
 export const UNASSIGN_GUEST = 'UNASSIGN_GUEST'
 export const REORDER_GUESTS = 'REORDER_GUESTS'
@@ -61,8 +62,8 @@ export function deleteTableThunk(text, userId) {
     console.log("deleteTableThunk");
     return (dispatch) => {
         dispatch(deleteTable(text));
-        let ref = firebase.database().ref('/users/' + userId + '/data/tables');
-        ref.once("value").then(function(snapshot) {
+        let refTables = firebase.database().ref('/users/' + userId + '/data/tables');
+        refTables.once("value").then(function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var childData = childSnapshot.val();
                 if (childData.key == text) {
@@ -71,7 +72,19 @@ export function deleteTableThunk(text, userId) {
                 }
             });
         });
+
+        let refGuests = firebase.database().ref('/users/' + userId + '/data/added');
+        refGuests.once("value").then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var childData = childSnapshot.val();
+                if (childData.assignedTo == text) {
+                    firebase.database().ref('/users/' + userId + '/data/added/' + childSnapshot.key).update({assignedTo: ''});
+                }
+            });
+        });
     }
+
+    // also unassign all guests who might be assigned to this table!
 }
 
 export function addTable(name, capacity) {
@@ -87,12 +100,63 @@ export function addTableThunk(name, capacity, userId) {
     }
 }
 
+export function updateCapacity(table, newCapacity) {
+    return { type: UPDATE_CAPACITY, table: table, capacity: newCapacity }
+}
+
+export function updateCapacityThunk(table, newCapacity, userId) {
+    return (dispatch) => {
+        dispatch(updateCapacity(table, newCapacity));
+        let ref = firebase.database().ref('/users/' + userId + '/data/tables');
+        ref.once("value").then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var childData = childSnapshot.val();
+                if (childData.key == table) {
+                    firebase.database().ref('/users/' + userId + '/data/tables/' + childSnapshot.key).update({capacity: newCapacity});
+                }
+            });
+        });
+    }
+}
+
 export function assignGuest(guest, table) {
     return { type: ASSIGN_GUEST, guestKey: guest, tableKey: table }
 }
 
+export function assignGuestThunk(guest, table, userId) {
+    console.log("assignGuestThunk");
+    return (dispatch) => {
+        dispatch(assignGuest(guest, table));
+        let ref = firebase.database().ref('/users/' + userId + '/data/added');
+        ref.once("value").then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var childData = childSnapshot.val();
+                if (childData.key == guest) {
+                    firebase.database().ref('/users/' + userId + '/data/added/' + childSnapshot.key).update({assignedTo: table});
+                }
+            });
+        });
+    }
+}
+
 export function unassignGuest(guest,table) {
     return { type: UNASSIGN_GUEST, guestKey: guest, tableKey: table }
+}
+
+export function unassignGuestThunk(guest, table, userId) {
+    console.log("unassignGuestThunk");
+    return (dispatch) => {
+        dispatch(unassignGuest(guest, table));
+        let ref = firebase.database().ref('/users/' + userId + '/data/added');
+        ref.once("value").then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var childData = childSnapshot.val();
+                if (childData.key == guest) {
+                    firebase.database().ref('/users/' + userId + '/data/added/' + childSnapshot.key).update({assignedTo: ''});
+                }
+            });
+        });
+    }
 }
 
 export function reorderGuests(guests,table) {

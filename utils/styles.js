@@ -1,8 +1,8 @@
 export const myStyles = {
     colors: {
         light: '#EFDBDC',
-        dark: '#A03B54',
-        lightgrey: '',
+        dark: '#f8049c',
+        lightgrey: '#e6e6e6',
         darkgrey: '',
         white: '#ffffff'
     }
