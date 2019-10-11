@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Modal } from "react-native";
 import { connect } from 'react-redux';
-import { deleteTable, addTable, deleteTableThunk, addTableThunk } from './../actions/actions';
+import { deleteTable, addTable } from './../actions/actions';
 import AddTableModal from './Modal';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
@@ -24,12 +24,12 @@ class Tables extends Component {
 	}
 
 	renderSeparator = () => {
-	    return <View style={{ height: 1, width: width, backgroundColor: "#FFE6E6"}} />
+	    return <View style={{ height: 1, width: width, paddingLeft: 15, paddingRight: 15, backgroundColor: myStyles.colors.dark}} />
   	}
 
 	deleteTable = (key) => {
 		console.log('Deleting:', key)
-		this.props.dispatch(deleteTableThunk(key, this.props.guests.userId));
+		this.props.dispatch(deleteTable(key));
 		return this.setState({});
 	}
 
@@ -52,7 +52,7 @@ class Tables extends Component {
 			}
 		});
 		return exists ? null : this.setState({modalVisible: false}, () => {
-			this.props.dispatch(addTableThunk(name, capacity, this.props.guests.userId))
+			this.props.dispatch(addTable(name, capacity))
 		});
 	}
 
@@ -74,7 +74,7 @@ class Tables extends Component {
 						  		{
 									text: 'Delete',
 									color: '#ffffff',
-									backgroundColor: '#532323',
+									backgroundColor: myStyles.colors.secondary,
 									onPress: () => { this.deleteTable(key) }
 								}
 							]}>
@@ -82,13 +82,13 @@ class Tables extends Component {
 								<Icon
 									name='circle'
 									type='font-awesome'
-									color='#FFE6E6'
+									color={myStyles.colors.dark}
 								/>
 								<Text style={styles.item}>{item.key}</Text>
 								<Icon
 									name='users'
 									type='font-awesome'
-									color='#FFE6E6'
+									color={myStyles.colors.dark}
 								/>
 								<Text style={styles.item}>{item.capacity}</Text>
 								<TouchableOpacity
@@ -100,7 +100,7 @@ class Tables extends Component {
 									<Icon
 									  	name='chevron-right'
 									  	type='font-awesome'
-									  	color='#FFE6E6'
+									  	color={myStyles.colors.dark}
 									/>
 								</TouchableOpacity>
 							</View>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 	},
 	row: {
 		flex: 1,
-		backgroundColor: '#FCF8F9'
+		backgroundColor: '#fff'
 	},
 	item: {
 		flex: 1,

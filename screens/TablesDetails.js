@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { connect } from 'react-redux';
-import { deleteTable, deleteTableThunk, assignGuest, assignGuestThunk, unassignGuest, unassignGuestThunk, reorderGuests, updateCapacityThunk } from './../actions/actions';
+import { deleteTable, assignGuest, unassignGuest, reorderGuests, updateCapacity } from './../actions/actions';
 import Tables from './Tables';
 import { Dimensions } from "react-native";
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -32,7 +32,7 @@ class TablesDetails extends Component {
 
 	deleteTable = (key) => {
 		console.log('Deleting:', key)
-		this.props.dispatch(deleteTableThunk(key, this.props.guests.userId));
+		this.props.dispatch(deleteTable(key));
 		this.setState({});
 		this.props.navigation.navigate('Tables', {update: true});
 	}
@@ -46,7 +46,7 @@ class TablesDetails extends Component {
 	updateCapacity = (newCapacity,isVisible) => {
 		console.log(newCapacity);
 		// do sth to actually update the capacity
-		this.props.dispatch(updateCapacityThunk(this.props.navigation.getParam('table'), newCapacity, this.props.guests.userId));
+		this.props.dispatch(updateCapacity(this.props.navigation.getParam('table'), newCapacity));
 		return this.setState({
 			modalVisible: isVisible,
 			tableCapacity: newCapacity
@@ -80,13 +80,13 @@ class TablesDetails extends Component {
 			return;
 		}
 		console.log('Adding', guestName, 'to table', tableKey)
-		this.props.dispatch(assignGuestThunk(guestName,tableKey,this.props.guests.userId));
+		this.props.dispatch(assignGuest(guestName,tableKey));
 		this.setState({});
 	}
 
 	removeGuestFromTable = (guestName, tableKey) => {
 		console.log('Removing', guestName, 'from table', tableKey)
-		this.props.dispatch(unassignGuestThunk(guestName,tableKey,this.props.guests.userId));
+		this.props.dispatch(unassignGuest(guestName,tableKey));
 		this.setState({});
 	}
 
@@ -96,7 +96,7 @@ class TablesDetails extends Component {
 		        style={{
 			        height: 1,
 			        width: width,
-			        backgroundColor: "#FFE6E6"
+			        backgroundColor: myStyles.colors.dark
 		        }}
 		    />
 	    );
@@ -196,13 +196,13 @@ class TablesDetails extends Component {
 								<Icon
 									name='user'
 									type='font-awesome'
-									color='#FFE6E6'
+									color={myStyles.colors.dark}
 								/>
 								<Text style={styles.item} >{guestName}</Text>
 								<Icon
 									name='circle'
 									type='font-awesome'
-									color='#FFE6E6'
+									color={myStyles.colors.dark}
 								/>
 								<Text style={styles.item}>{item.assignedTo}</Text>
 							</TouchableOpacity>

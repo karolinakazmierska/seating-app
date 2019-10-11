@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Button, List } from "react-native";
-import { connect } from 'react-redux'; // connect to redux
-import { addGuest, deleteGuest, addGuestThunk, deleteGuestThunk } from './../actions/actions';
+import { connect } from 'react-redux';
+import { addGuest, deleteGuest } from './../actions/actions';
 import { Dimensions } from "react-native";
 import Swipeout from 'react-native-swipeout';
 import { Icon } from 'react-native-elements';
@@ -14,29 +14,40 @@ class Guests extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			name: ''
+			name: '',
+			error: ''
 		}
 	}
 
 	handleInput = (text) => {
-    	this.setState({ name: text })
+    	this.setState({ ...this.state, name: text })
    	}
 
+
 	submitGuest(name) {
-		let exists = false;
+		this.setState({ ...this.state, error: ''});
+		var error;
+		if (name == '') {
+			error = 'Name cannot be empty';
+		}
 		this.props.guests.added.forEach(obj => {
-			console.log(obj.name == name)
-			if (obj.name.toUpperCase() == name.toUpperCase() || name == '') {
-				console.log('This guest is already on the list'); //@todo: display message to the user
-				exists = true;
+			if (obj.name.toUpperCase() == name.toUpperCase()) {
+				error = 'This guest is already on the list';
 			}
 		})
-		this.setState({ name: '' })
-		return exists ? null : this.props.dispatch(addGuestThunk(name, this.props.guests.userId));
+		if (error == 'Name cannot be empty') {
+			this.setState({ ...this.state, error: 'Name cannot be empty' })
+		} else if (error == 'This guest is already on the list') {
+			this.setState({ ...this.state, error: 'This guest is already on the list' })
+		} else {
+			this.props.dispatch(addGuest(name));
+			this.setState({ name: '', error: '' })
+		}
 	}
 
+
 	deleteGuest(name) {
-		this.props.dispatch(deleteGuestThunk(name, this.props.guests.userId));
+		this.props.dispatch(deleteGuest(name));
 		this.setState({})
 	}
 
@@ -45,8 +56,10 @@ class Guests extends Component {
 		    <View
 		        style={{
 			        height: 1,
-			        width: width,
-			        backgroundColor: "#FFE6E6"
+			        width: width-30,
+					marginLeft: 15,
+					paddingRight: 15,
+			        backgroundColor: myStyles.colors.faded
 		        }}
 		    />
 	    );
@@ -65,6 +78,7 @@ class Guests extends Component {
 					placeholder={'Enter your guest name'}
 				/>
 				<View style={styles.line}></View>
+				{this.state.error ? <Text>{this.state.error}</Text> : null }
 				<TouchableOpacity
          			style={styles.button}
 					onPress={() => {
@@ -73,6 +87,7 @@ class Guests extends Component {
        			>
          			<Text style={styles.buttonText}>Add guest</Text>
        			</TouchableOpacity>
+
 				{this.props.guests.added.length === 0 ? null : <FlatList
 					ItemSeparatorComponent={this.renderSeparator}
 		          	data={this.props.guests.added}
@@ -82,7 +97,7 @@ class Guests extends Component {
 						  		{
 									text: 'Delete',
 									color: '#ffffff',
-									backgroundColor: '#532323',
+									backgroundColor: myStyles.colors.secondary,
 									onPress: () => { this.deleteGuest(guestName) }
 								}
 							]}>
@@ -93,11 +108,11 @@ class Guests extends Component {
 									color={myStyles.colors.dark}
 								/>
 								<Text style={styles.item}>{guestName}</Text>
-								<Icon
-									name='circle'
-									type='font-awesome'
-									color={myStyles.colors.dark}
-								/>
+								{item.assignedTo === "" ? null : <Icon
+										name='circle'
+										type='font-awesome'
+										color={myStyles.colors.dark}
+									/>}
 								<Text style={styles.item}>{item.assignedTo}</Text>
 							</View>
 						</Swipeout>
@@ -131,7 +146,7 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		fontSize: 20,
-		color: "#FFE6E6"
+		color: myStyles.colors.white
 	},
 	row: {
 		backgroundColor: '#fff',

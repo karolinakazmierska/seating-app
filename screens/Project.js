@@ -5,10 +5,6 @@ import firebase from './../utils/firebase';
 import { myStyles } from './../utils/styles';
 
 export default class Project extends Component {
-	signOut = () => {
-		firebase.auth().signOut();
-		this.props.navigation.navigate('Home');
-	}
 
 	render() {
 		const { navigation } = this.props;
@@ -59,10 +55,10 @@ export default class Project extends Component {
 
 				<View style={{marginBottom: 160}}>
 					<View style={styles.table}>
-						<FadeInLeftTop style={styles.chair1}><Text>Martha</Text></FadeInLeftTop>
-						<FadeInRightTop style={styles.chair2}><Text>John</Text></FadeInRightTop>
-						<FadeInLeftBottom style={styles.chair3}><Text>Susan</Text></FadeInLeftBottom>
-						<FadeInRightBottom style={styles.chair4}><Text>Bob</Text></FadeInRightBottom>
+						<FadeInLeftTop style={styles.chair1}><Text style={{color: "white"}}>Martha</Text></FadeInLeftTop>
+						<FadeInRightTop style={styles.chair2}><Text style={{color: "white"}}>John</Text></FadeInRightTop>
+						<FadeInLeftBottom style={styles.chair3}><Text style={{color: "white"}}>Susan</Text></FadeInLeftBottom>
+						<FadeInRightBottom style={styles.chair4}><Text style={{color: "white"}}>Bob</Text></FadeInRightBottom>
 					</View>
 				</View>
 
@@ -76,11 +72,6 @@ export default class Project extends Component {
 						style={styles.btn}
 	          			onPress={() => this.props.navigation.navigate('Tables')} >
 						<Text style={styles.buttonText}>Assign guests to tables</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.btnSignOut}
-	          			onPress={() => this.signOut()} >
-						<Text style={styles.btnSignOutText}>Sign out</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -155,19 +146,9 @@ const styles = StyleSheet.create({
 		width: 140,
 		overflow: "visible",
 	},
-	chair: {
-		backgroundColor: myStyles.colors.light,
-		borderRadius: 60,
-		height: 60,
-		width: 60,
-		position: "absolute",
-		textAlign: "center",
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-	},
 	chair1: {
-		backgroundColor: myStyles.colors.light,
+		backgroundColor: myStyles.colors.secondary,
+		color: myStyles.colors.white,
 		borderRadius: 60,
 		height: 60,
 		width: 60,
@@ -181,7 +162,8 @@ const styles = StyleSheet.create({
 		overflow: "hidden"
 	},
 	chair2: {
-		backgroundColor: myStyles.colors.light,
+		backgroundColor: myStyles.colors.secondary,
+		color: myStyles.colors.white,
 		borderRadius: 60,
 		height: 60,
 		width: 60,
@@ -195,7 +177,8 @@ const styles = StyleSheet.create({
 		overflow: "hidden"
 	},
 	chair3: {
-		backgroundColor: myStyles.colors.light,
+		backgroundColor: myStyles.colors.secondary,
+		color: myStyles.colors.white,
 		borderRadius: 60,
 		height: 60,
 		width: 60,
@@ -209,7 +192,8 @@ const styles = StyleSheet.create({
 		overflow: "hidden"
 	},
 	chair4: {
-		backgroundColor: myStyles.colors.light,
+		backgroundColor: myStyles.colors.secondary,
+		color: myStyles.colors.white,
 		borderRadius: 60,
 		height: 60,
 		width: 60,

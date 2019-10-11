@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SET_USER, SET_STATE_FROM_DATABASE, ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST, REORDER_GUESTS, REFRESH } from './../actions/actions';
+import {  ADD_GUEST, DELETE_GUEST, DELETE_TABLE, ASSIGN_GUEST, UNASSIGN_GUEST, REORDER_GUESTS, REFRESH } from './../actions/actions';
 
 const INITIAL_STATE = {
     userId: '',
