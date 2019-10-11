@@ -7,6 +7,7 @@ export const myStyles = {
         lightgrey: '#e6e6e6', // visible light grey
         darkgrey: '',
         white: '#ffffff',
-        faded: '#FEE5F5' // very light pink
+        faded: '#FEE5F5', // very light pink
+        error: '#ff000d'
     }
 }

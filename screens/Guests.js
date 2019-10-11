@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Button, List } from "react-native";
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput, Button, List } from 'react-native';
 import { connect } from 'react-redux';
 import { addGuest, deleteGuest } from './../actions/actions';
-import { Dimensions } from "react-native";
+import { Dimensions } from 'react-native';
 import Swipeout from 'react-native-swipeout';
 import { Icon } from 'react-native-elements';
 import { myStyles } from './../utils/styles';
@@ -22,7 +22,6 @@ class Guests extends Component {
 	handleInput = (text) => {
     	this.setState({ ...this.state, name: text })
    	}
-
 
 	submitGuest(name) {
 		this.setState({ ...this.state, error: ''});
@@ -45,24 +44,13 @@ class Guests extends Component {
 		}
 	}
 
-
 	deleteGuest(name) {
 		this.props.dispatch(deleteGuest(name));
 		this.setState({})
 	}
 
 	renderSeparator = () => {
-	    return (
-		    <View
-		        style={{
-			        height: 1,
-			        width: width-30,
-					marginLeft: 15,
-					paddingRight: 15,
-			        backgroundColor: myStyles.colors.faded
-		        }}
-		    />
-	    );
+	    return  <View style={{ height: 1, width: width-30, marginLeft: 15, paddingRight: 15, backgroundColor: myStyles.colors.faded }} />
   	}
 
 	render() {
@@ -108,7 +96,7 @@ class Guests extends Component {
 									color={myStyles.colors.dark}
 								/>
 								<Text style={styles.item}>{guestName}</Text>
-								{item.assignedTo === "" ? null : <Icon
+								{item.assignedTo === '' ? null : <Icon
 										name='circle'
 										type='font-awesome'
 										color={myStyles.colors.dark}
@@ -126,13 +114,13 @@ class Guests extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: "flex-start",
-		alignItems: "center",
-		backgroundColor: "#fff"
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		backgroundColor: '#fff'
 	},
 	welcome: {
 		fontSize: 20,
-		textAlign: "center",
+		textAlign: 'center',
 		margin: 10
 	},
 	button: {
@@ -140,8 +128,8 @@ const styles = StyleSheet.create({
 		height: 50,
 		borderRadius: 30,
 		backgroundColor: myStyles.colors.dark,
-		alignItems: "center",
-		justifyContent: "center",
+		alignItems: 'center',
+		justifyContent: 'center',
 		margin: 15
 	},
 	buttonText: {
@@ -157,10 +145,10 @@ const styles = StyleSheet.create({
 		width: width-30,
 		height: 50,
 		paddingHorizontal: 10,
-		borderColor: "#ffffff",
-		backgroundColor: "#ffffff",
-		color: "black",
-		textAlign: "left"
+		borderColor: '#ffffff',
+		backgroundColor: '#ffffff',
+		color: 'black',
+		textAlign: 'left'
 	},
 	line: {
 		width: width - 30,
@@ -176,8 +164,8 @@ const styles = StyleSheet.create({
 	},
 	guestContainer: {
 		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
+		flexDirection: 'row',
+		alignItems: 'center',
 		paddingHorizontal: 15
 	}
 });

@@ -16,6 +16,7 @@ class Tables extends Component {
 		super(props);
 		this.state = {
 			modalVisible: false,
+			error: ''
 		}
 	}
 
@@ -24,7 +25,7 @@ class Tables extends Component {
 	}
 
 	renderSeparator = () => {
-	    return <View style={{ height: 1, width: width, paddingLeft: 15, paddingRight: 15, backgroundColor: myStyles.colors.dark}} />
+	    return <View style={{ height: 1, width: width, marginLeft: 15, paddingRight: 15, backgroundColor: myStyles.colors.faded}} />
   	}
 
 	deleteTable = (key) => {
@@ -34,31 +35,34 @@ class Tables extends Component {
 	}
 
 	addTable = (name, capacity) => {
-		let exists = false;
+		this.setState({ ...this.state, error: ''});
+		var error;
 		if (name === '') {
-			console.log('Name cannot be empty') //@todo: display message to the user
-			exists = true;
+			error = 'name';
 		}
 		if (capacity == 0) {
-			console.log('Table capacity cannot be zero') //@todo: display message to the user
-			exists = true;
+			error = 'capacity';
 		}
-		console.log('Current tables:', this.props.guests.tables);
 		this.props.guests.tables.forEach(obj => {
-			console.log('Checking if table exists:', obj.key.toUpperCase(), name.toUpperCase() )
-			if (obj.key.toUpperCase() == name.toUpperCase() || name == '') {
-				console.log('This table is already on the list'); //@todo: display message to the user
-				exists = true;
+			if (obj.key.toUpperCase() == name.toUpperCase()) {
+				error = 'exists';
 			}
 		});
-		return exists ? null : this.setState({modalVisible: false}, () => {
-			this.props.dispatch(addTable(name, capacity))
-		});
+		if (error == 'name') {
+			this.setState({ ...this.state, error: 'Name cannot be empty' }, () => console.log(this.state));
+		} else if (error == 'capacity') {
+			this.setState({ ...this.state, error: 'Table capacity cannot be zero' }, () => console.log(this.state));
+		} else if (error == 'exists') {
+			this.setState({ ...this.state, error: 'This table is already on the list' }, () => console.log(this.state));
+		} else {
+			this.props.dispatch(addTable(name, capacity));
+			this.setState({ ...this.state, modalVisible: false}, () => console.log(this.state));
+		}
 	}
 
 	setModalVisible(visible) {
 		console.log(visible)
-    	return this.setState({modalVisible: visible});
+    	return this.setState({ ...this.state, modalVisible: visible});
   	}
 
 	render() {
@@ -107,7 +111,7 @@ class Tables extends Component {
 						</Swipeout>
 					}}
         		/>}
-				<AddTableModal close={this.setModalVisible.bind(this)} add={this.addTable.bind(this)} isVisible={this.state.modalVisible} />
+				<AddTableModal close={this.setModalVisible.bind(this)} add={this.addTable.bind(this)} isVisible={this.state.modalVisible} error={this.state.error} />
 				<TouchableOpacity
 					style={styles.addTable}
 					onPress={() => this.setModalVisible(true)} >

@@ -35,6 +35,7 @@ class AddTableModal extends Component {
     }
 
     render() {
+        console.log('-----------------------------MODAL:', this.props.error);
         return <Modal
             animationType="slide"
             transparent={false}
@@ -75,6 +76,7 @@ class AddTableModal extends Component {
                             <Text style={styles.cancelText}>Add</Text>
                         </TouchableOpacity>
                     </View>
+                    {this.props.error ? <Text style={styles.error}>{this.props.error}</Text> : null }
                 </View>
             </View>
         </Modal>
@@ -126,8 +128,12 @@ const styles = StyleSheet.create({
 		margin: 15
 	},
 	cancelText: {
-		color: "#ffffff"
-	}
+		color: '#ffffff'
+	},
+    error: {
+        color: myStyles.colors.error,
+        textAlign: 'center'
+    }
 })
 
 const mapStateToProps = (state) => {
