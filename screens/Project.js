@@ -53,7 +53,7 @@ export default class Project extends Component {
 			<View style={styles.container}>
 				<Text style={styles.welcome}>Add guests to your project and assign them to tables of your choice</Text>
 
-				<View style={{marginBottom: 160}}>
+				<View style={{marginBottom: 50}}>
 					<View style={styles.table}>
 						<FadeInLeftTop style={styles.chair1}><Text style={{color: "white"}}>Martha</Text></FadeInLeftTop>
 						<FadeInRightTop style={styles.chair2}><Text style={{color: "white"}}>John</Text></FadeInRightTop>
@@ -117,25 +117,6 @@ const styles = StyleSheet.create({
 		color: "white",
 		alignSelf: "center",
 		textAlign: "center"
-	},
-	btnSignOut: {
-		width: 160,
-		height: 40,
-		borderRadius: 30,
-		borderColor: myStyles.colors.dark,
-		backgroundColor: "white",
-		paddingHorizontal: 20,
-		alignItems: "center",
-		justifyContent: "center",
-		textAlign: "center",
-		marginTop: 60,
-	},
-	btnSignOutText: {
-		color: myStyles.colors.dark,
-		fontSize: 16,
-		textTransform: 'uppercase',
-		alignSelf: "center",
-		textAlign: "center",
 	},
 	table: {
 		borderStyle: "solid",

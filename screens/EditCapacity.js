@@ -31,13 +31,18 @@ class EditCapacity extends Component {
     }
 
     render() {
+        console.log('Rerendering', this.props.error)
         return <Modal
             animationType="slide"
             transparent={false}
             visible={this.props.isVisible}>
             <View style={styles.modal}>
                 <View>
-                    <Text style={styles.welcome}>TABLE CAPACITY</Text>
+                    <Text style={styles.welcome}>Table capacity</Text>
+                    {this.props.error ?
+                        <Text style={styles.error}>Capacity cannot be lower than the number of currently assigned guests. To lower the capacity, first remove some guests from this table</Text> :
+                        null
+                    }
                     <View style={{flexDirection: 'row', justifyContent: "center", marginVertical: 20}}>
                         <TouchableOpacity
                             style={styles.counter}
@@ -116,6 +121,11 @@ const styles = StyleSheet.create({
 	},
 	cancelText: {
 		color: "#ffffff"
+	},
+    error: {
+		color: myStyles.colors.error,
+		fontSize: 10,
+		textAlign: 'center'
 	}
 })
 

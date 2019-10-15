@@ -21,36 +21,37 @@ class TablesDetails extends Component {
 		this.state = {
 			tableCapacity: this.props.navigation.getParam('tableCapacity'),
 			maxCapacity: false,
-			modalVisible: false
+			modalVisible: false,
+			minCapacityError: false
 		}
 	}
 
 	shouldComponentUpdate = () => {
-		console.log(this.props.guests.userId)
 		return true;
 	}
 
 	deleteTable = (key) => {
-		console.log('Deleting:', key)
 		this.props.dispatch(deleteTable(key));
 		this.setState({});
 		this.props.navigation.navigate('Tables', {update: true});
 	}
 
 	setModalVisible = (isVisible) => {
-		console.log("Editing table's capacity");
-		console.log(isVisible);
     	return this.setState({modalVisible: isVisible});
 	}
 
 	updateCapacity = (newCapacity,isVisible) => {
-		console.log(newCapacity);
-		// do sth to actually update the capacity
-		this.props.dispatch(updateCapacity(this.props.navigation.getParam('table'), newCapacity));
-		return this.setState({
-			modalVisible: isVisible,
-			tableCapacity: newCapacity
-		});
+		if (newCapacity < this.getAssignedGuests(this.props.navigation.getParam('table')).length) {
+			console.log('Not possible to update the capacity'); // @todo: pass the error message to the modal and display it there
+			this.setState({minCapacityError: true});
+		} else {
+			this.props.dispatch(updateCapacity(this.props.navigation.getParam('table'), newCapacity));
+			return this.setState({
+				modalVisible: isVisible,
+				tableCapacity: newCapacity,
+				minCapacityError: false
+			});
+		}
 	}
 
 	getAssignedGuests = (key) => {
@@ -75,17 +76,14 @@ class TablesDetails extends Component {
 
 	addGuestToTable = (guestName, tableKey) => {
 		if (this.getAssignedGuests(tableKey).length >= this.state.tableCapacity) {
-			console.log('Cannot assign any more guests to this table');
 			this.displayAlert();
 			return;
 		}
-		console.log('Adding', guestName, 'to table', tableKey)
 		this.props.dispatch(assignGuest(guestName,tableKey));
 		this.setState({});
 	}
 
 	removeGuestFromTable = (guestName, tableKey) => {
-		console.log('Removing', guestName, 'from table', tableKey)
 		this.props.dispatch(unassignGuest(guestName,tableKey));
 		this.setState({});
 	}
@@ -156,7 +154,7 @@ class TablesDetails extends Component {
 										onPressOut={moveEnd}
 										onPress={() => this.removeGuestFromTable(guestName,tableKey)}
 									>
-										<Text  numberOfLines={1}>{guestName}</Text>
+										<Text numberOfLines={1}>{guestName}</Text>
 									</TouchableOpacity>
 								)
 							}}
@@ -176,7 +174,8 @@ class TablesDetails extends Component {
 						key={tableKey}
 						currentCapacity={this.state.tableCapacity}
 						update={this.updateCapacity.bind(this)}
-						isVisible={this.state.modalVisible} />
+						isVisible={this.state.modalVisible}
+						error={this.state.minCapacityError} />
 
 					<TouchableOpacity
 						style={styles.delete}
@@ -226,11 +225,12 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		margin: 10,
 		fontWeight: "bold",
-		color: "#532323"
+		color: myStyles.colors.dark
 	},
 	params: {
 		textAlign: "center",
-		margin: 10
+		marginVertical: 5,
+		marginHorizontal: 22
 	},
 	header: {
 		marginVertical: 10,
@@ -252,8 +252,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: "absolute",
-		bottom: 4,
-		right: 4
+		bottom: 8,
+		right: 12
 	},
 	edit: {
 		height: 40,
@@ -263,11 +263,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: "absolute",
-		bottom: 4,
-		left: 4
+		bottom: 8,
+		left: 12
 	},
 	deleteText: {
-		color: "#ffffff",
+		color: myStyles.colors.white,
 		fontSize: 12
 	},
 	guestContainer: {
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		paddingHorizontal: 15,
-		backgroundColor: '#FCF8F9'
+		backgroundColor: myStyles.colors.faded
 	},
 	tableContainer: {
 		width: width,
@@ -299,19 +299,20 @@ const styles = StyleSheet.create({
 		justifyContent: "center"
 	},
 	tableName: {
-		color: "#FCF8F9",
+		color: myStyles.colors.white,
 		fontSize: 16
 	},
 	guestAtThisTable: {
 		width: chairDim,
 		height: chairDim,
 		borderRadius: chairDim,
-		backgroundColor: '#FCF8F9',
+		backgroundColor: myStyles.colors.faded,
 		textAlign: "center",
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
 	},
+
 	guest: {
 		backgroundColor: "#fefefe",
 		fontSize: 10,
